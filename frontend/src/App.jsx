@@ -2,26 +2,27 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
+import ReviewDetail from "./pages/ReviewDetail";
+import Login from "./pages/Login";
+import CreateReview from "./pages/CreateReview"; // <-- 1. Formu aldık
+import ProtectedRoute from "./components/ProtectedRoute"; // <-- 2. Güvenlik kalkanını aldık
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* MainLayout tüm sayfalar için iskelet görevi görür */}
         <Route path="/" element={<MainLayout />}>
-          {/* Ana Sayfa */}
           <Route index element={<Home />} />
+          <Route path="review/:slug" element={<ReviewDetail />} />
+          <Route path="login" element={<Login />} />
 
-          {/* 2. Sayfamız (Detay Sayfası - Bir sonraki adımda kodlayacağız, şimdilik yer tutucu koyalım) */}
+          {/* 3. Korumalı Rota (Sadece giriş yapmış editörler girebilir!) */}
           <Route
-            path="review/:slug"
+            path="new-review"
             element={
-              <div className="py-20 text-center text-slate-400">
-                <h2 className="text-2xl font-bold text-white mb-2">
-                  Detay Sayfası Yapım Aşamasında
-                </h2>
-                <p>Adım 5'te bu sayfayı tasarlayacağız!</p>
-              </div>
+              <ProtectedRoute>
+                <CreateReview />
+              </ProtectedRoute>
             }
           />
         </Route>
