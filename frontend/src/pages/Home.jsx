@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { fetchReviews, fetchCategories } from "../api";
+import { Link } from "react-router-dom";
+import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
-import { Sparkles, Layers } from "lucide-react";
+import { Sparkles, Layers, ArrowUpRight, Flame } from "lucide-react";
 
 const Home = () => {
   const [reviews, setReviews] = useState([]);
@@ -10,7 +11,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Kategorileri sadece sayfa ilk açıldığında 1 kez çekiyoruz
+  // Kategorileri 1 kez çekiyoruz
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -23,7 +24,7 @@ const Home = () => {
     getCategories();
   }, []);
 
-  // Seçilen kategori (selectedCategory) her değiştiğinde incelemeleri yeniden filtreleyip çekiyoruz
+  // Seçilen kategoriye göre incelemeleri çekiyoruz
   useEffect(() => {
     const getReviews = async () => {
       setLoading(true);
@@ -42,85 +43,156 @@ const Home = () => {
     getReviews();
   }, [selectedCategory]);
 
+  // Dizideki ilk incelemeyi (Öne Çıkan / Hero) ayıklıyoruz
+  const featuredReview =
+    reviews.length > 0 ? reviews[0].attributes || reviews[0] : null;
+  const featuredImageUrl = featuredReview
+    ? getStrapiMedia(featuredReview.coverImage)
+    : null;
+  const featuredCategory =
+    featuredReview?.category?.data?.attributes?.name ||
+    featuredReview?.category?.name ||
+    "GENEL";
+
   return (
-    <div>
-      {/* Hero / Başlık Alanı */}
-      <section className="text-center py-12 mb-10 border-b border-slate-900/80">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-4">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Yeni Nesil İnceleme Platformu</span>
-        </div>
-        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
-          En Son Oyun &{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
-            Teknoloji Rehberi
-          </span>
-        </h1>
-        <p className="mt-4 text-slate-400 max-w-xl mx-auto text-sm sm:text-base">
-          Derinlemesine incelemeler, tarafsız puanlamalar ve donanım rehberleri
-          ile bir sonraki favori oyununu veya ekipmanını keşfet.
-        </p>
+    <div className="py-6 animate-fade-in">
+      {/* ========================================================= */}
+      {/* ADIM 2: DEVASA HERO (ÖNE ÇIKAN İNCELEME) ALANI            */}
+      {/* ========================================================= */}
 
-        {/* Kategori Filtreleme Butonları */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
-          <button
-            onClick={() => setSelectedCategory("all")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              selectedCategory === "all"
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105"
-                : "bg-slate-900 text-slate-400 border border-slate-800 hover:text-white hover:border-slate-700"
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            Tümü
-          </button>
-
-          {categories.map((cat) => {
-            const item = cat.attributes || cat;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(item.slug)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  selectedCategory === item.slug
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105"
-                    : "bg-slate-900 text-slate-400 border border-slate-800 hover:text-white hover:border-slate-700"
-                }`}
-              >
-                {item.name}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* İçerik Alanı (Loading / Error / Grid) */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-80 bg-slate-900/60 border border-slate-800/80 rounded-2xl animate-pulse"
-            />
-          ))}
+        <div className="w-full h-[450px] sm:h-[550px] bg-zinc-900/60 border border-zinc-800/80 rounded-3xl animate-pulse mb-16 flex items-end p-8 sm:p-12">
+          <div className="space-y-4 w-full max-w-2xl">
+            <div className="h-6 w-32 bg-zinc-800 rounded-md" />
+            <div className="h-12 w-3/4 bg-zinc-800 rounded-lg" />
+            <div className="h-4 w-full bg-zinc-800/60 rounded" />
+          </div>
         </div>
       ) : error ? (
-        <div className="p-6 bg-red-500/10 border border-red-500/30 rounded-2xl text-center text-red-400">
-          <p className="font-semibold">{error}</p>
+        <div className="p-8 bg-rose-500/10 border border-rose-500/30 rounded-3xl text-center text-rose-400 mb-16 font-gaming">
+          <p className="text-lg font-bold">{error}</p>
         </div>
-      ) : reviews.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800/50">
-          <p className="text-slate-400 font-medium">
-            Bu kategoride henüz yayınlanmış bir inceleme bulunmuyor.
-          </p>
+      ) : featuredReview ? (
+        <section className="relative w-full h-[480px] sm:h-[580px] rounded-3xl overflow-hidden border border-zinc-800/80 shadow-[0_0_50px_rgba(0,0,0,0.8)] mb-20 group">
+          {featuredImageUrl ? (
+            <img
+              src={featuredImageUrl}
+              alt={featuredReview.title}
+              className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center text-zinc-700 font-gaming text-xl">
+              Görsel Bulunamadı
+            </div>
+          )}
+
+          <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#08080a]/90 via-[#08080a]/40 to-transparent" />
+
+          <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-10 flex items-center gap-2">
+            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-black tracking-widest uppercase rounded-full font-gaming shadow-lg">
+              <Flame className="w-3 h-3 text-indigo-400 fill-indigo-400 animate-pulse" />
+              FEATURED REVIEW
+            </span>
+          </div>
+
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-12 z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div className="max-w-3xl">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="px-3 py-1 bg-indigo-600 text-white text-[11px] font-black tracking-widest uppercase rounded font-gaming shadow-[0_0_15px_rgba(99,102,241,0.5)]">
+                  {featuredCategory}
+                </span>
+                <span className="text-xs font-bold text-zinc-300 font-gaming tracking-wider">
+                  SCORE:{" "}
+                  <span className="text-white font-black">
+                    {featuredReview.score}
+                  </span>
+                  /10
+                </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase font-gaming leading-none group-hover:text-indigo-200 transition-colors duration-300">
+                {featuredReview.title}
+              </h1>
+
+              <p className="mt-3 text-zinc-300 text-sm sm:text-base font-normal line-clamp-2 max-w-2xl leading-relaxed">
+                {featuredReview.summary}
+              </p>
+            </div>
+
+            <div className="flex-shrink-0">
+              <Link
+                to={`/review/${featuredReview.slug}`}
+                className="inline-flex items-center gap-3 bg-white hover:bg-zinc-200 text-black font-gaming font-black px-8 py-4 rounded-xl tracking-widest uppercase text-xs shadow-[0_0_25px_rgba(255,255,255,0.25)] hover:shadow-[0_0_35px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <span>READ MORE</span>
+                <ArrowUpRight className="w-4 h-4 text-black font-bold" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* ========================================================= */}
+      {/* ADIM 3: LATEST REVIEWS & FÜTÜRİSTİK FİLTRE BUTONLARI     */}
+      {/* ========================================================= */}
+      <section id="latest" className="mb-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-zinc-800/80 pb-6">
+          {/* Başlık - Vatic.gg Tarzı */}
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-8 bg-indigo-600 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.8)]" />
+            <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-gaming">
+              LATEST <span className="text-zinc-500">REVIEWS</span>
+            </h2>
+          </div>
+
+          {/* Fütüristik Kategori Butonları (Vatic.gg Havası) */}
+          <div className="flex flex-wrap items-center gap-2 bg-[#111116] p-1.5 rounded-xl border border-zinc-800/80">
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={`px-5 py-2 rounded-lg text-xs font-gaming font-black tracking-wider uppercase transition-all duration-200 ${
+                selectedCategory === "all"
+                  ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-[1.02]"
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/80"
+              }`}
+            >
+              TÜMÜ
+            </button>
+
+            {categories.map((cat) => {
+              const item = cat.attributes || cat;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(item.slug)}
+                  className={`px-5 py-2 rounded-lg text-xs font-gaming font-black tracking-wider uppercase transition-all duration-200 ${
+                    selectedCategory === item.slug
+                      ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-[1.02]"
+                      : "text-zinc-400 hover:text-white hover:bg-zinc-900/80"
+                  }`}
+                >
+                  {item.name}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((item) => (
-            <ReviewCard key={item.id} review={item} />
-          ))}
-        </div>
-      )}
+
+        {/* Yenilenmiş ReviewCard Grid'i */}
+        {!loading && !error && reviews.length === 0 ? (
+          <div className="text-center py-20 bg-[#111116] rounded-2xl border border-zinc-800/60 font-gaming">
+            <p className="text-zinc-400 font-bold uppercase tracking-wider text-sm">
+              BU KATEGORİDE HENÜZ BİR İNCELEME BULUNMUYOR.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {reviews.map((item) => (
+              <ReviewCard key={item.id} review={item} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 };
