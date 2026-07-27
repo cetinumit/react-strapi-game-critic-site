@@ -25,10 +25,10 @@ export const getStrapiMedia = (media) => {
 
 export const fetchReviews = async (categorySlug = null) => {
   try {
-    let endpoint = "/reviews?populate=*";
+    let endpoint = "/reviews?populate=*&sort=createdAt:desc";
 
     if (categorySlug && categorySlug !== "all") {
-      endpoint += `&filters[category][slug][$eq]=${categorySlug}`;
+      endpoint += `&filters[category][slug][$eq]=${categorySlug}&sort=createdAt:desc`;
     }
 
     const response = await apiClient.get(endpoint);
@@ -176,4 +176,38 @@ export const createReview = async (reviewData) => {
   }
 };
 
+// Gelişmiş ve Garantili İnceleme Silme Fonksiyonu
+export const deleteReview = async (targetId) => {
+  try {
+    // Projende axios kütüphanesi import edilmemiş olma ihtimaline karşı:
+    // (Eğer dosyanın en üstünde import axios from 'axios'; varsa sorun yok)
+
+    // Strapi'nin çalıştığı port adresini manuel ve garantili olarak belirtiyoruz
+    const BASE_URL = "http://localhost:1337";
+
+    // Token ismini bul
+    const token =
+      localStorage.getItem("jwt") ||
+      localStorage.getItem("token") ||
+      localStorage.getItem("userToken");
+
+    if (!token) {
+      throw new Error(
+        "Oturum (token) bulunamadı. Lütfen editör hesabınıza tekrar giriş yapın.",
+      );
+    }
+
+    // İstek atılırken artık BASE_URL kullanıyoruz
+    const response = await axios.delete(`${BASE_URL}/api/reviews/${targetId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Silme işlemi API hatası:", error);
+    throw error;
+  }
+};
 export default apiClient;

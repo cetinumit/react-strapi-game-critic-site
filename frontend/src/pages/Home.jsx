@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
 import { Sparkles, Layers, ArrowUpRight, Flame } from "lucide-react";
+import About from "../components/About";
 
 const Home = () => {
   const [reviews, setReviews] = useState([]);
@@ -11,7 +12,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Kategorileri 1 kez çekiyoruz
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -24,7 +24,6 @@ const Home = () => {
     getCategories();
   }, []);
 
-  // Seçilen kategoriye göre incelemeleri çekiyoruz
   useEffect(() => {
     const getReviews = async () => {
       setLoading(true);
@@ -43,7 +42,6 @@ const Home = () => {
     getReviews();
   }, [selectedCategory]);
 
-  // Dizideki ilk incelemeyi (Öne Çıkan / Hero) ayıklıyoruz
   const featuredReview =
     reviews.length > 0 ? reviews[0].attributes || reviews[0] : null;
   const featuredImageUrl = featuredReview
@@ -57,7 +55,7 @@ const Home = () => {
   return (
     <div className="py-6 animate-fade-in">
       {/* ========================================================= */}
-      {/* ADIM 2: DEVASA HERO (ÖNE ÇIKAN İNCELEME) ALANI            */}
+      {/* DEVASA HERO (ÖNE ÇIKAN İNCELEME) ALANI                  */}
       {/* ========================================================= */}
 
       {loading ? (
@@ -89,10 +87,11 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/60 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#08080a]/90 via-[#08080a]/40 to-transparent" />
 
+          {/* TÜRKÇELEŞTİRİLDİ: "FEATURED REVIEW" -> "ÖNE ÇIKAN İNCELEME" */}
           <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-10 flex items-center gap-2">
             <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-black tracking-widest uppercase rounded-full font-gaming shadow-lg">
               <Flame className="w-3 h-3 text-indigo-400 fill-indigo-400 animate-pulse" />
-              FEATURED REVIEW
+              ÖNE ÇIKAN İNCELEME
             </span>
           </div>
 
@@ -103,7 +102,7 @@ const Home = () => {
                   {featuredCategory}
                 </span>
                 <span className="text-xs font-bold text-zinc-300 font-gaming tracking-wider">
-                  SCORE:{" "}
+                  PUAN:{" "}
                   <span className="text-white font-black">
                     {featuredReview.score}
                   </span>
@@ -120,12 +119,13 @@ const Home = () => {
               </p>
             </div>
 
+            {/* TÜRKÇELEŞTİRİLDİ: "READ MORE" -> "DEVAMINI OKU" */}
             <div className="flex-shrink-0">
               <Link
                 to={`/review/${featuredReview.slug}`}
                 className="inline-flex items-center gap-3 bg-white hover:bg-zinc-200 text-black font-gaming font-black px-8 py-4 rounded-xl tracking-widest uppercase text-xs shadow-[0_0_25px_rgba(255,255,255,0.25)] hover:shadow-[0_0_35px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 transition-all duration-200"
               >
-                <span>READ MORE</span>
+                <span>DEVAMINI OKU</span>
                 <ArrowUpRight className="w-4 h-4 text-black font-bold" />
               </Link>
             </div>
@@ -134,19 +134,18 @@ const Home = () => {
       ) : null}
 
       {/* ========================================================= */}
-      {/* ADIM 3: LATEST REVIEWS & FÜTÜRİSTİK FİLTRE BUTONLARI     */}
+      {/* SON İNCELEMELER & FİLTRELER                             */}
       {/* ========================================================= */}
       <section id="latest" className="mb-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-zinc-800/80 pb-6">
-          {/* Başlık - Vatic.gg Tarzı */}
+          {/* TÜRKÇELEŞTİRİLDİ: "LATEST REVIEWS" -> "SON İNCELEMELER" */}
           <div className="flex items-center gap-3">
             <div className="w-2 h-8 bg-indigo-600 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.8)]" />
             <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-gaming">
-              LATEST <span className="text-zinc-500">REVIEWS</span>
+              SON <span className="text-zinc-500">İNCELEMELER</span>
             </h2>
           </div>
 
-          {/* Fütüristik Kategori Butonları (Vatic.gg Havası) */}
           <div className="flex flex-wrap items-center gap-2 bg-[#111116] p-1.5 rounded-xl border border-zinc-800/80">
             <button
               onClick={() => setSelectedCategory("all")}
@@ -178,7 +177,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Yenilenmiş ReviewCard Grid'i */}
         {!loading && !error && reviews.length === 0 ? (
           <div className="text-center py-20 bg-[#111116] rounded-2xl border border-zinc-800/60 font-gaming">
             <p className="text-zinc-400 font-bold uppercase tracking-wider text-sm">
@@ -193,6 +191,7 @@ const Home = () => {
           </div>
         )}
       </section>
+      <About />
     </div>
   );
 };
