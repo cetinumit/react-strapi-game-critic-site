@@ -89,7 +89,7 @@ const EditReview = () => {
       // EĞER YENİ GÖRSEL SEÇİLDİYSE ÖNCE ONU YÜKLE
       if (newCover) {
         const imageId = await uploadImage(newCover);
-        payload.cover = imageId; // Yeni görselin ID'sini payload'a ekle
+        payload.coverImage = imageId; // Strapi'deki doğru alan adı: coverImage
       }
 
       await updateReview(targetId, payload);
