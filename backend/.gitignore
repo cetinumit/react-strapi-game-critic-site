@@ -1,0 +1,8 @@
+# SQLite Veritabanı
+.tmp/
+*.db
+*.sqlite
+*.sqlite-journal
+
+# Strapi Yüklemeleri (Resimler vs.)
+public/uploads/
