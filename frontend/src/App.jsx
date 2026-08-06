@@ -6,6 +6,7 @@ import ReviewDetail from "./pages/ReviewDetail";
 import Login from "./pages/Login";
 import CreateReview from "./pages/CreateReview"; // <-- 1. Formu aldık
 import ProtectedRoute from "./components/ProtectedRoute"; // <-- 2. Güvenlik kalkanını aldık
+import EditReview from "./pages/EditReview";
 
 function App() {
   return (
@@ -22,6 +23,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreateReview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="edit/:slug"
+            element={
+              <ProtectedRoute>
+                <EditReview />
               </ProtectedRoute>
             }
           />

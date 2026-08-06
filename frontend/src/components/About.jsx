@@ -109,7 +109,7 @@ const About = () => {
                     Yönetim Yeri
                   </p>
                   <p className="text-zinc-200 font-medium leading-relaxed">
-                    Sakarya Üniversitesi Teknokent
+                    Sakarya Üniversitesi
                     <br />
                     Serdivan / Sakarya
                   </p>

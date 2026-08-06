@@ -210,4 +210,38 @@ export const deleteReview = async (targetId) => {
     throw error;
   }
 };
+
+// İnceleme Güncelleme Fonksiyonu
+export const updateReview = async (targetId, updateData) => {
+  try {
+    const BASE_URL = "http://localhost:1337";
+    const token =
+      localStorage.getItem("jwt") ||
+      localStorage.getItem("token") ||
+      localStorage.getItem("userToken");
+
+    if (!token) {
+      throw new Error("Oturum bulunamadı. Lütfen tekrar giriş yapın.");
+    }
+
+    // Strapi v5'te güncellenecek veriler "data" objesi içine sarılarak gönderilir
+    const response = await axios.put(
+      `${BASE_URL}/api/reviews/${targetId}`,
+      {
+        data: updateData,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Güncelleme işlemi API hatası:", error);
+    throw error;
+  }
+};
+
 export default apiClient;
