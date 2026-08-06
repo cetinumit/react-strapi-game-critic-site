@@ -233,18 +233,18 @@ const ReviewDetail = () => {
         )}
 
         {/* Gradientler hafifletildi. Sadece metinlerin okunacağı alt ve sol köşeler koyu kalacak. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/50 via-transparent to-transparent" />
 
         {/* Fütüristik Geri Dön Butonu */}
         <div className="absolute top-8 left-4 sm:left-8 md:left-12 z-20">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-zinc-300 hover:text-white hover:bg-white/10 bg-black/50 backdrop-blur-md px-4 py-2.5 rounded-xl border border-zinc-700/50 transition-all font-gaming text-xs font-black tracking-widest uppercase shadow-lg"
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-zinc-300 hover:text-white hover:bg-white/10 bg-black/50 backdrop-blur-md px-4 py-2.5 rounded-xl border border-zinc-700/50 transition-all font-gaming text-xs font-black tracking-widest uppercase shadow-lg cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             GERİ DÖN
-          </Link>
+          </button>
         </div>
 
         {/* Başlık ve Meta Bilgileri */}
@@ -282,6 +282,7 @@ const ReviewDetail = () => {
                 <div className="flex flex-wrap items-center gap-3">
                   <Link
                     to={`/edit/${slug}`}
+                    replace={true}
                     className="inline-flex items-center gap-2 bg-indigo-500/10 hover:bg-indigo-500 text-indigo-400 hover:text-white px-4 py-2.5 rounded-lg border border-indigo-500/50 hover:border-indigo-500 transition-all font-gaming text-xs font-black tracking-widest uppercase shadow-lg"
                   >
                     <Edit3 className="w-4 h-4" />

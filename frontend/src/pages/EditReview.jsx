@@ -5,8 +5,10 @@ import {
   updateReview,
   isAuthenticated,
   uploadImage,
+  fetchCategories,
 } from "../api";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import TiptapEditor from "../components/TiptapEditor";
 
 const EditReview = () => {
   const { slug } = useParams();
@@ -15,6 +17,7 @@ const EditReview = () => {
   const [saving, setSaving] = useState(false);
   const [targetId, setTargetId] = useState(null);
   const [newCover, setNewCover] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -22,6 +25,8 @@ const EditReview = () => {
     score: 0,
     pros: "",
     cons: "",
+    content: [],
+    category: "",
   });
 
   useEffect(() => {
@@ -34,13 +39,19 @@ const EditReview = () => {
       try {
         const data = await fetchReviewBySlug(slug);
         const review = data.attributes || data;
+        const [reviewData, categoriesData] = await Promise.all([
+          fetchReviewBySlug(slug),
+          fetchCategories(),
+        ]);
 
         setTargetId(data.documentId || data.id);
-
+        setCategories(categoriesData.data || categoriesData || []);
         setFormData({
           title: review.title || "",
           summary: review.summary || "",
           score: review.score || 0,
+          // Ana metni (Blocks JSON dizisini) doğrudan state'e alıyoruz
+          content: review.content || [], // <-- BURAYI EKLEDİK
           // Dizileri (array) formda alt alta gösterebilmek için birleştiriyoruz
           pros: Array.isArray(review.pros)
             ? review.pros.join("\n")
@@ -48,6 +59,7 @@ const EditReview = () => {
           cons: Array.isArray(review.cons)
             ? review.cons.join("\n")
             : review.cons || "",
+          category: review.category?.documentId || review.category?.id || "",
         });
       } catch (error) {
         alert("Veriler yüklenirken hata oluştu.");
@@ -84,6 +96,8 @@ const EditReview = () => {
         score: Number(formData.score),
         pros: formattedPros,
         cons: formattedCons,
+        content: formData.content,
+        category: formData.category,
       };
 
       // EĞER YENİ GÖRSEL SEÇİLDİYSE ÖNCE ONU YÜKLE
@@ -93,7 +107,7 @@ const EditReview = () => {
       }
 
       await updateReview(targetId, payload);
-      navigate(`/review/${slug}`);
+      navigate(`/review/${slug}`, { replace: true });
     } catch (error) {
       alert("Güncellenirken bir hata oluştu. F12 Konsolunu kontrol edin.");
     } finally {
@@ -144,6 +158,37 @@ const EditReview = () => {
           </div>
           <div>
             <label className="block text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2">
+              Kategori
+            </label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+              className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition appearance-none cursor-pointer"
+            >
+              <option value="" disabled>
+                Kategori Seçiniz
+              </option>
+              {categories.map((cat) => {
+                // Strapi veri yapısına göre cat.attributes.name veya doğrudan cat.name olabilir
+                const catName = cat.name || cat.attributes?.name;
+                const catId = cat.documentId || cat.id;
+
+                return (
+                  <option
+                    key={catId}
+                    value={catId}
+                    className="bg-zinc-900 text-white"
+                  >
+                    {catName}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div>
+            <label className="block text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2">
               Başlık
             </label>
             <input
@@ -167,6 +212,18 @@ const EditReview = () => {
               required
               rows={3}
               className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition"
+            />
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase">
+              İnceleme Metni
+            </label>
+            <TiptapEditor
+              value={formData.content} // Strapi'de ana metin alanının adı 'content' değilse burayı ona göre değiştir!
+              onChange={(newContent) =>
+                setFormData({ ...formData, content: newContent })
+              }
             />
           </div>
 

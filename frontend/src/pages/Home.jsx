@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigationType } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
 import { Sparkles, Layers, ArrowUpRight, Flame } from "lucide-react";
@@ -12,6 +12,13 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Yeni Güvenlik Kalkanımız: Önce ışınlanma bitsin, sonra kaydetmeye başlayalım
+  const [isRestored, setIsRestored] = useState(false);
+  const navType = useNavigationType();
+
+  // ==========================================
+  // KATEGORİLERİ ÇEK
+  // ==========================================
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -24,6 +31,9 @@ const Home = () => {
     getCategories();
   }, []);
 
+  // ==========================================
+  // İNCELEMELERİ ÇEK
+  // ==========================================
   useEffect(() => {
     const getReviews = async () => {
       setLoading(true);
@@ -42,6 +52,50 @@ const Home = () => {
     getReviews();
   }, [selectedCategory]);
 
+  // ==========================================
+  // ADIM 1: GERİ DÖNÜŞLERDE YERİMİZİ BULALIM (RESTORE)
+  // ==========================================
+  useEffect(() => {
+    if (!loading) {
+      if (navType === "POP") {
+        const savedPosition = sessionStorage.getItem("homeScrollPosition");
+        if (savedPosition !== null) {
+          setTimeout(() => {
+            window.scrollTo({
+              top: parseInt(savedPosition, 10),
+              behavior: "instant",
+            });
+            setIsRestored(true); // Işınlanma tamamlandı, kalkanı indir!
+          }, 150);
+        } else {
+          setIsRestored(true);
+        }
+      } else {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        setIsRestored(true);
+      }
+    }
+  }, [loading, navType]);
+
+  // ==========================================
+  // ADIM 2: IŞINLANMA BİTTİKTEN SONRA YENİ KONUMLARI KAYDET (SAVE)
+  // ==========================================
+  useEffect(() => {
+    // Eğer henüz doğru yere ışınlanmadıysak hiçbir şeyi kaydetme!
+    if (!isRestored) return;
+
+    // Kullanıcı mouse tekerleğini HİÇ oynatmadan karta tıklarsa diye
+    // şu anki konumu hemen bankoya (hafızaya) alıyoruz.
+    sessionStorage.setItem("homeScrollPosition", window.scrollY);
+
+    const handleScroll = () => {
+      sessionStorage.setItem("homeScrollPosition", window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isRestored]);
+
   const featuredReview =
     reviews.length > 0 ? reviews[0].attributes || reviews[0] : null;
   const featuredImageUrl = featuredReview
@@ -54,10 +108,7 @@ const Home = () => {
 
   return (
     <div className="py-6 animate-fade-in">
-      {/* ========================================================= */}
-      {/* DEVASA HERO (ÖNE ÇIKAN İNCELEME) ALANI                  */}
-      {/* ========================================================= */}
-
+      {/* DEVASA HERO (ÖNE ÇIKAN İNCELEME) ALANI */}
       {loading ? (
         <div className="w-full h-[450px] sm:h-[550px] bg-zinc-900/60 border border-zinc-800/80 rounded-3xl animate-pulse mb-16 flex items-end p-8 sm:p-12">
           <div className="space-y-4 w-full max-w-2xl">
@@ -84,10 +135,9 @@ const Home = () => {
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/60 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#08080a]/90 via-[#08080a]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#08080a]/60 via-transparent to-transparent" />
 
-          {/* TÜRKÇELEŞTİRİLDİ: "FEATURED REVIEW" -> "ÖNE ÇIKAN İNCELEME" */}
           <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-10 flex items-center gap-2">
             <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-black tracking-widest uppercase rounded-full font-gaming shadow-lg">
               <Flame className="w-3 h-3 text-indigo-400 fill-indigo-400 animate-pulse" />
@@ -119,7 +169,6 @@ const Home = () => {
               </p>
             </div>
 
-            {/* TÜRKÇELEŞTİRİLDİ: "READ MORE" -> "DEVAMINI OKU" */}
             <div className="flex-shrink-0">
               <Link
                 to={`/review/${featuredReview.slug}`}
@@ -133,12 +182,9 @@ const Home = () => {
         </section>
       ) : null}
 
-      {/* ========================================================= */}
-      {/* SON İNCELEMELER & FİLTRELER                             */}
-      {/* ========================================================= */}
+      {/* SON İNCELEMELER & FİLTRELER */}
       <section id="latest" className="mb-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-zinc-800/80 pb-6">
-          {/* TÜRKÇELEŞTİRİLDİ: "LATEST REVIEWS" -> "SON İNCELEMELER" */}
           <div className="flex items-center gap-3">
             <div className="w-2 h-8 bg-indigo-600 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.8)]" />
             <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-gaming">

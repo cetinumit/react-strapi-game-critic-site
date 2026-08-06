@@ -14,7 +14,7 @@
 /* Tüm sitede 'Outfit' fontunu, başlıklarda ise keskin 'Space Grotesk' havasını kullanacağız */
 body {
   font-family: "Outfit", sans-serif;
-  @apply bg-[#08080a] text-zinc-100 antialiased selection:bg-white selection:text-black;
+  @apply bg-zinc-950 text-zinc-100 antialiased selection:bg-white selection:text-black;
 }
 
 /* Görseldeki gibi başlıkların o keskin, e-spor dergisi havasında durması için özel sınıf */
