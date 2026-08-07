@@ -35,6 +35,24 @@ const config = ({
   },
   upload: {
     config: {
+      // Render'ın konteyner diski geçici: her restart/deploy'da sıfırlanıyor ve
+      // local provider ile yüklenen dosyalar kayboluyor (DB kaydı kalıyor, dosya gidiyor).
+      // Bu yüzden medya Cloudinary'de tutuluyor.
+      provider: "cloudinary",
+      providerOptions: {
+        cloud_name: env("CLOUDINARY_NAME"),
+        api_key: env("CLOUDINARY_KEY"),
+        api_secret: env("CLOUDINARY_SECRET"),
+      },
+      actionOptions: {
+        upload: {
+          folder: env("CLOUDINARY_FOLDER", "game-critic"),
+        },
+        uploadStream: {
+          folder: env("CLOUDINARY_FOLDER", "game-critic"),
+        },
+        delete: {},
+      },
       security: {
         allowedTypes: allowedMediaTypes,
         deniedTypes: deniedExecutableTypes,
