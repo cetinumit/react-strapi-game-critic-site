@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { PlusCircle, LogOut, LogIn, User } from "lucide-react";
 import { isAuthenticated, getCurrentUser, logoutUser } from "../api";
+import AccessIcon from "./icons/AccessIcon";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -122,7 +123,7 @@ const Navbar = () => {
               to="/login"
               className="flex items-center gap-2 bg-zinc-900 hover:bg-white text-zinc-300 hover:text-black text-xs font-bold px-5 py-2.5 rounded-sm border border-line hover:border-white transition-all duration-300 uppercase tracking-widest font-gaming shadow-sm group"
             >
-              <LogIn className="w-3.5 h-3.5 text-phosphor group-hover:text-black transition-colors" />
+              <AccessIcon className="w-3.5 h-3.5 text-phosphor group-hover:text-black transition-colors" />
               <span>EDİTÖR GİRİŞİ</span>
             </Link>
           )}
