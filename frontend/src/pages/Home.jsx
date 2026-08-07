@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigationType } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
-import { Sparkles, Layers, ArrowUpRight, Flame } from "lucide-react";
+import { ArrowUpRight, Flame } from "lucide-react";
 import About from "../components/About";
 
 const Home = () => {
@@ -11,14 +11,9 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Yeni Güvenlik Kalkanımız: Önce ışınlanma bitsin, sonra kaydetmeye başlayalım
   const [isRestored, setIsRestored] = useState(false);
   const navType = useNavigationType();
 
-  // ==========================================
-  // KATEGORİLERİ ÇEK
-  // ==========================================
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -31,9 +26,6 @@ const Home = () => {
     getCategories();
   }, []);
 
-  // ==========================================
-  // İNCELEMELERİ ÇEK
-  // ==========================================
   useEffect(() => {
     const getReviews = async () => {
       setLoading(true);
@@ -52,9 +44,6 @@ const Home = () => {
     getReviews();
   }, [selectedCategory]);
 
-  // ==========================================
-  // ADIM 1: GERİ DÖNÜŞLERDE YERİMİZİ BULALIM (RESTORE)
-  // ==========================================
   useEffect(() => {
     if (!loading) {
       if (navType === "POP") {
@@ -65,7 +54,7 @@ const Home = () => {
               top: parseInt(savedPosition, 10),
               behavior: "instant",
             });
-            setIsRestored(true); // Işınlanma tamamlandı, kalkanı indir!
+            setIsRestored(true);
           }, 150);
         } else {
           setIsRestored(true);
@@ -77,21 +66,12 @@ const Home = () => {
     }
   }, [loading, navType]);
 
-  // ==========================================
-  // ADIM 2: IŞINLANMA BİTTİKTEN SONRA YENİ KONUMLARI KAYDET (SAVE)
-  // ==========================================
   useEffect(() => {
-    // Eğer henüz doğru yere ışınlanmadıysak hiçbir şeyi kaydetme!
     if (!isRestored) return;
-
-    // Kullanıcı mouse tekerleğini HİÇ oynatmadan karta tıklarsa diye
-    // şu anki konumu hemen bankoya (hafızaya) alıyoruz.
     sessionStorage.setItem("homeScrollPosition", window.scrollY);
-
     const handleScroll = () => {
       sessionStorage.setItem("homeScrollPosition", window.scrollY);
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isRestored]);
@@ -108,21 +88,20 @@ const Home = () => {
 
   return (
     <div className="py-6 animate-fade-in">
-      {/* DEVASA HERO (ÖNE ÇIKAN İNCELEME) ALANI */}
       {loading ? (
-        <div className="w-full h-[450px] sm:h-[550px] bg-zinc-900/60 border border-zinc-800/80 rounded-3xl animate-pulse mb-16 flex items-end p-8 sm:p-12">
+        <div className="w-full h-[450px] sm:h-[550px] bg-panel border border-line rounded-lg animate-pulse mb-16 flex items-end p-8 sm:p-12">
           <div className="space-y-4 w-full max-w-2xl">
-            <div className="h-6 w-32 bg-zinc-800 rounded-md" />
-            <div className="h-12 w-3/4 bg-zinc-800 rounded-lg" />
-            <div className="h-4 w-full bg-zinc-800/60 rounded" />
+            <div className="h-6 w-32 bg-panel-raised" />
+            <div className="h-12 w-3/4 bg-panel-raised" />
+            <div className="h-4 w-full bg-panel-raised/60" />
           </div>
         </div>
       ) : error ? (
-        <div className="p-8 bg-rose-500/10 border border-rose-500/30 rounded-3xl text-center text-rose-400 mb-16 font-gaming">
+        <div className="p-8 bg-critical/10 border border-critical/30 rounded-lg text-center text-critical mb-16 font-gaming">
           <p className="text-lg font-bold">{error}</p>
         </div>
       ) : featuredReview ? (
-        <section className="relative w-full h-[480px] sm:h-[580px] rounded-3xl overflow-hidden border border-zinc-800/80 shadow-[0_0_50px_rgba(0,0,0,0.8)] mb-20 group">
+        <section className="relative w-full h-[480px] sm:h-[580px] rounded-lg overflow-hidden border border-line shadow-[0_0_50px_rgba(0,0,0,0.8)] mb-20 group">
           {featuredImageUrl ? (
             <img
               src={featuredImageUrl}
@@ -130,17 +109,17 @@ const Home = () => {
               className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
             />
           ) : (
-            <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center text-zinc-700 font-gaming text-xl">
+            <div className="absolute inset-0 bg-panel-raised flex items-center justify-center text-zinc-700 font-gaming text-xl">
               Görsel Bulunamadı
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/30 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#08080a]/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-void via-void/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-void/60 via-transparent to-transparent" />
 
           <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-10 flex items-center gap-2">
-            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-black tracking-widest uppercase rounded-full font-gaming shadow-lg">
-              <Flame className="w-3 h-3 text-indigo-400 fill-indigo-400 animate-pulse" />
+            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-void/70 backdrop-blur-md border border-phosphor/30 text-phosphor text-[10px] font-bold tracking-widest uppercase font-data shadow-lg">
+              <Flame className="w-3 h-3 text-phosphor fill-phosphor/30" />
               ÖNE ÇIKAN İNCELEME
             </span>
           </div>
@@ -148,10 +127,10 @@ const Home = () => {
           <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-12 z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div className="max-w-3xl">
               <div className="flex items-center gap-3 mb-3">
-                <span className="px-3 py-1 bg-indigo-600 text-white text-[11px] font-black tracking-widest uppercase rounded font-gaming shadow-[0_0_15px_rgba(99,102,241,0.5)]">
+                <span className="px-3 py-1 bg-phosphor text-black text-[11px] font-black tracking-widest uppercase font-gaming">
                   {featuredCategory}
                 </span>
-                <span className="text-xs font-bold text-zinc-300 font-gaming tracking-wider">
+                <span className="text-xs font-bold text-zinc-300 font-data tracking-wider">
                   PUAN:{" "}
                   <span className="text-white font-black">
                     {featuredReview.score}
@@ -160,7 +139,7 @@ const Home = () => {
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase font-gaming leading-none group-hover:text-indigo-200 transition-colors duration-300">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase font-gaming leading-none group-hover:text-phosphor/90 transition-colors duration-300">
                 {featuredReview.title}
               </h1>
 
@@ -172,33 +151,32 @@ const Home = () => {
             <div className="flex-shrink-0">
               <Link
                 to={`/review/${featuredReview.slug}`}
-                className="inline-flex items-center gap-3 bg-white hover:bg-zinc-200 text-black font-gaming font-black px-8 py-4 rounded-xl tracking-widest uppercase text-xs shadow-[0_0_25px_rgba(255,255,255,0.25)] hover:shadow-[0_0_35px_rgba(255,255,255,0.4)] transform hover:-translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center gap-3 bg-white hover:bg-phosphor text-black font-gaming font-black px-8 py-4 tracking-widest uppercase text-xs transform hover:-translate-y-0.5 transition-all duration-200"
               >
                 <span>DEVAMINI OKU</span>
-                <ArrowUpRight className="w-4 h-4 text-black font-bold" />
+                <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
         </section>
       ) : null}
 
-      {/* SON İNCELEMELER & FİLTRELER */}
       <section id="latest" className="mb-12">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-zinc-800/80 pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-line pb-6">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-8 bg-indigo-600 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.8)]" />
+            <div className="w-2 h-8 bg-phosphor" />
             <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-gaming">
               SON <span className="text-zinc-500">İNCELEMELER</span>
             </h2>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 bg-[#111116] p-1.5 rounded-xl border border-zinc-800/80">
+          <div className="flex flex-wrap items-center gap-2 bg-panel p-1.5 border border-line">
             <button
               onClick={() => setSelectedCategory("all")}
-              className={`px-5 py-2 rounded-lg text-xs font-gaming font-black tracking-wider uppercase transition-all duration-200 ${
+              className={`px-5 py-2 text-xs font-gaming font-black tracking-wider uppercase transition-all duration-200 ${
                 selectedCategory === "all"
-                  ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-[1.02]"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/80"
+                  ? "bg-phosphor text-black"
+                  : "text-zinc-400 hover:text-white hover:bg-panel-raised"
               }`}
             >
               TÜMÜ
@@ -210,10 +188,10 @@ const Home = () => {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(item.slug)}
-                  className={`px-5 py-2 rounded-lg text-xs font-gaming font-black tracking-wider uppercase transition-all duration-200 ${
+                  className={`px-5 py-2 text-xs font-gaming font-black tracking-wider uppercase transition-all duration-200 ${
                     selectedCategory === item.slug
-                      ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-[1.02]"
-                      : "text-zinc-400 hover:text-white hover:bg-zinc-900/80"
+                      ? "bg-phosphor text-black"
+                      : "text-zinc-400 hover:text-white hover:bg-panel-raised"
                   }`}
                 >
                   {item.name}
@@ -224,7 +202,7 @@ const Home = () => {
         </div>
 
         {!loading && !error && reviews.length === 0 ? (
-          <div className="text-center py-20 bg-[#111116] rounded-2xl border border-zinc-800/60 font-gaming">
+          <div className="text-center py-20 bg-panel border border-line font-gaming">
             <p className="text-zinc-400 font-bold uppercase tracking-wider text-sm">
               BU KATEGORİDE HENÜZ BİR İNCELEME BULUNMUYOR.
             </p>
