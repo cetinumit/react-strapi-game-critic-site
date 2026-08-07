@@ -40,7 +40,8 @@ const Navbar = () => {
     location.pathname.startsWith("/review") || location.hash === "#latest";
 
   return (
-    <header className="sticky top-0 z-50 bg-[#08080a]/90 backdrop-blur-md border-b border-zinc-800/80 transition-all">
+    <header className="sticky top-0 z-50 bg-void/90 backdrop-blur-md border-b border-line transition-all">
+      {" "}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
         {/* Sol Logo */}
         <Link to="/" className="flex items-center gap-3 group">
@@ -96,13 +97,13 @@ const Navbar = () => {
           {isAuth ? (
             <div className="flex items-center gap-3 bg-zinc-900/80 border border-zinc-800 p-1.5 rounded-lg">
               <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-300 px-3 py-1 bg-zinc-800/50 rounded-md font-gaming">
-                <User className="w-3.5 h-3.5 text-indigo-400" />
+                <User className="w-3.5 h-3.5 text-phosphor" />
                 {user?.username || "EDİTÖR"}
               </span>
 
               <Link
                 to="/new-review"
-                className="flex items-center gap-1.5 bg-white hover:bg-zinc-200 text-black text-xs font-extrabold px-4 py-2 rounded-md transition-all shadow-[0_0_15px_rgba(255,255,255,0.15)] uppercase tracking-wider font-gaming"
+                className="flex items-center gap-1.5 bg-white hover:bg-zinc-200 text-black text-xs font-extrabold px-4 py-2 rounded-sm transition-all uppercase tracking-wider font-gaming"
               >
                 <PlusCircle className="w-4 h-4 text-black" />
                 <span className="hidden sm:inline">YENİ İNCELEME</span>
@@ -119,9 +120,9 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="flex items-center gap-2 bg-zinc-900 hover:bg-white text-zinc-300 hover:text-black text-xs font-bold px-5 py-2.5 rounded-md border border-zinc-800 hover:border-white transition-all duration-300 uppercase tracking-widest font-gaming shadow-sm group"
+              className="flex items-center gap-2 bg-zinc-900 hover:bg-white text-zinc-300 hover:text-black text-xs font-bold px-5 py-2.5 rounded-sm border border-line hover:border-white transition-all duration-300 uppercase tracking-widest font-gaming shadow-sm group"
             >
-              <LogIn className="w-3.5 h-3.5 text-indigo-400 group-hover:text-black transition-colors" />
+              <LogIn className="w-3.5 h-3.5 text-phosphor group-hover:text-black transition-colors" />
               <span>EDİTÖR GİRİŞİ</span>
             </Link>
           )}

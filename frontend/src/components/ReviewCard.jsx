@@ -13,10 +13,10 @@ const ReviewCard = ({ review }) => {
   return (
     <Link
       to={`/review/${data.slug}`}
-      className="group relative bg-[#111116] border border-zinc-800/80 rounded-2xl overflow-hidden hover:border-zinc-600 hover:shadow-[0_0_30px_rgba(0,0,0,0.9)] transition-all duration-300 flex flex-col justify-between transform hover:-translate-y-1.5"
+      className="group relative bg-panel border border-line rounded-lg overflow-hidden hover:border-phosphor/40 hover:shadow-[0_0_30px_rgba(168,232,60,0.08)] transition-all duration-300 flex flex-col justify-between"
     >
       <div>
-        <div className="relative h-56 w-full overflow-hidden bg-zinc-900">
+        <div className="relative h-56 w-full overflow-hidden bg-panel-raised">
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -29,19 +29,24 @@ const ReviewCard = ({ review }) => {
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#111116] via-transparent to-transparent opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-panel via-transparent to-transparent opacity-80" />
 
-          <span className="absolute top-4 left-4 bg-[#08080a]/90 backdrop-blur-md text-white text-[10px] font-black tracking-widest px-3 py-1 rounded border border-zinc-800 uppercase font-gaming shadow-md group-hover:border-indigo-500/50 transition-colors">
+          <span className="absolute top-4 left-4 bg-void/90 backdrop-blur-md text-zinc-300 text-[10px] font-bold tracking-widest px-2.5 py-1 border border-line uppercase font-data">
             {categoryName}
           </span>
 
           <div className="absolute top-4 right-4 z-10">
             <ScoreBadge score={data.score} />
           </div>
+
+          {/* İmza öğesi: kalibrasyon damgası */}
+          <div className="absolute bottom-4 right-4 z-10 rotate-[-6deg] border border-zinc-500/40 text-zinc-400/70 text-[8px] font-data tracking-[0.2em] px-2 py-0.5 uppercase opacity-70 group-hover:opacity-100 group-hover:border-phosphor/50 group-hover:text-phosphor transition-all">
+            İncelendi
+          </div>
         </div>
 
         <div className="p-6">
-          <h3 className="text-xl font-black text-white uppercase font-gaming tracking-tight group-hover:text-indigo-400 transition-colors duration-200 line-clamp-1">
+          <h3 className="text-xl font-black text-white uppercase font-gaming tracking-tight group-hover:text-phosphor transition-colors duration-200 line-clamp-1">
             {data.title}
           </h3>
           <p className="text-zinc-400 text-sm mt-2.5 line-clamp-2 leading-relaxed font-normal">
@@ -50,13 +55,12 @@ const ReviewCard = ({ review }) => {
         </div>
       </div>
 
-      {/* TÜRKÇELEŞTİRİLDİ: "READ REVIEW" yerine "İNCELEMEYİ OKU" */}
-      <div className="px-6 pb-6 pt-2 flex items-center justify-between border-t border-zinc-800/60 mt-2">
-        <span className="text-xs font-bold uppercase tracking-widest text-zinc-300 group-hover:text-white transition-colors flex items-center gap-1 font-gaming">
+      <div className="px-6 pb-6 pt-2 flex items-center justify-between border-t border-line mt-2">
+        <span className="text-xs font-bold uppercase tracking-widest text-zinc-300 group-hover:text-white transition-colors font-gaming">
           İNCELEMEYİ OKU
         </span>
-        <div className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-200">
-          <ArrowUpRight className="w-4 h-4 transition-transform group-hover:scale-110" />
+        <div className="w-8 h-8 border border-line flex items-center justify-center group-hover:bg-phosphor group-hover:text-black group-hover:border-phosphor transition-all duration-200">
+          <ArrowUpRight className="w-4 h-4" />
         </div>
       </div>
     </Link>

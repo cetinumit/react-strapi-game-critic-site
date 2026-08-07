@@ -1,26 +1,30 @@
 import React from "react";
 
-const ScoreBadge = ({ score }) => {
+const ScoreBadge = ({ score, size = "sm" }) => {
   const numScore = Number(score) || 0;
 
-  // Puana göre dinamik yazı ve çerçeve renkleri
-  let badgeColor =
-    "text-amber-400 border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]"; // Ortalama
-  if (numScore >= 8.5) {
-    badgeColor =
-      "text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]"; // Harika
-  } else if (numScore >= 7.0) {
-    badgeColor =
-      "text-indigo-400 border-indigo-500/40 shadow-[0_0_10px_rgba(99,102,241,0.2)]"; // İyi
-  }
+  let tone = "text-amber-400 border-amber-500/50";
+  if (numScore >= 8.5) tone = "text-phosphor border-phosphor/50";
+  else if (numScore >= 7.0) tone = "text-zinc-200 border-zinc-500/50";
+  else if (numScore < 5) tone = "text-critical border-critical/50";
+
+  const isLarge = size === "lg";
 
   return (
-    // MİMARİ DÜZELTME: bg-[#08080a]/85 ve backdrop-blur-md ekledik. Arkada beyaz resim olsa bile kusursuz okunur!
     <span
-      className={`px-3 py-1 rounded-md text-xs font-black tracking-widest border bg-[#08080a]/85 backdrop-blur-md flex items-center gap-1 font-gaming ${badgeColor}`}
+      className={`inline-flex items-stretch bg-void/90 backdrop-blur-md border ${tone} font-data ${
+        isLarge ? "text-base" : "text-xs"
+      }`}
     >
-      <span>★</span>
-      <span>{numScore}/10</span>
+      <span
+        className={`flex items-center px-2 border-r ${tone.split(" ")[1]} text-[9px] tracking-[0.15em] uppercase opacity-70`}
+      >
+        SKOR
+      </span>
+      <span className="flex items-center gap-1 px-2.5 font-bold">
+        {numScore.toFixed(1)}
+        <span className="opacity-50 font-normal">/10</span>
+      </span>
     </span>
   );
 };
