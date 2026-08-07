@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api";
-import { Lock, Mail, ArrowRight, AlertCircle } from "lucide-react";
-
+import {
+  SecureNodeIcon,
+  ChannelIcon,
+  KeyMarkIcon,
+  AdvanceIcon,
+  WarningIcon,
+} from "../components/icons";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

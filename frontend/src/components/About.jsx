@@ -1,6 +1,11 @@
 import React from "react";
-import { Mail, MapPin, Code2, PenTool, Globe } from "lucide-react";
-
+import {
+  TraceIcon,
+  LayoutMarkIcon,
+  SignalIcon,
+  ChannelIcon,
+  CoordinateIcon,
+} from "../components/icons";
 const About = () => {
   return (
     <section

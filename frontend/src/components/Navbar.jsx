@@ -1,6 +1,11 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { PlusCircle, LogOut, LogIn, User } from "lucide-react";
+import {
+  AddEntryIcon,
+  ExitIcon,
+  AccessIcon,
+  OperatorIcon,
+} from "../components/icons";
 import { isAuthenticated, getCurrentUser, logoutUser } from "../api";
 import AccessIcon from "./icons/AccessIcon";
 

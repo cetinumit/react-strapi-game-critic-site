@@ -8,15 +8,15 @@ import {
 } from "../api";
 import ScoreBadge from "../components/ScoreBadge";
 import {
-  ArrowLeft,
-  PlusCircle,
-  MinusCircle,
-  XCircle,
-  Calendar,
-  User,
-  Trash2,
-  Edit3,
-} from "lucide-react";
+  ReturnIcon,
+  SignatureIcon,
+  TimestampIcon,
+  RevisionIcon,
+  RejectStampIcon,
+  GainIcon,
+  LossIcon,
+  FaultIcon,
+} from "../components/icons";
 
 const ReviewDetail = () => {
   const { slug } = useParams();

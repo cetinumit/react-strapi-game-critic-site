@@ -2,8 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getStrapiMedia } from "../api";
 import ScoreBadge from "./ScoreBadge";
-import { ArrowUpRight } from "lucide-react";
-
+import { AdvanceIcon } from "../components/icons";
 const ReviewCard = ({ review }) => {
   const data = review.attributes || review;
   const imageUrl = getStrapiMedia(data.coverImage);

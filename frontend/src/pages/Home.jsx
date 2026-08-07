@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigationType } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
-import { ArrowUpRight, Flame } from "lucide-react";
+import { AdvanceIcon, PeakIcon } from "../components/icons";
 import About from "../components/About";
 
 const Home = () => {
@@ -119,7 +119,7 @@ const Home = () => {
 
           <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-10 flex items-center gap-2">
             <span className="flex items-center gap-1.5 px-3 py-1.5 bg-void/70 backdrop-blur-md border border-phosphor/30 text-phosphor text-[10px] font-bold tracking-widest uppercase font-data shadow-lg">
-              <Flame className="w-3 h-3 text-phosphor fill-phosphor/30" />
+              <PeakIcon className="w-3 h-3 text-phosphor" />
               ÖNE ÇIKAN İNCELEME
             </span>
           </div>
