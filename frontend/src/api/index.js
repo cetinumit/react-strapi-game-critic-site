@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || " https://react-strapi-game-critic-site.onrender.com";
+const STRAPI_URL =
+  import.meta.env.VITE_STRAPI_URL ||
+  "https://react-strapi-game-critic-site.onrender.com";
 
 const apiClient = axios.create({
   baseURL: `${STRAPI_URL}/api`,
@@ -183,7 +185,7 @@ export const deleteReview = async (targetId) => {
     // (Eğer dosyanın en üstünde import axios from 'axios'; varsa sorun yok)
 
     // Strapi'nin çalıştığı port adresini manuel ve garantili olarak belirtiyoruz
-    const BASE_URL = " https://react-strapi-game-critic-site.onrender.com";
+    const BASE_URL = STRAPI_URL;
 
     // Token ismini bul
     const token =
@@ -214,7 +216,7 @@ export const deleteReview = async (targetId) => {
 // İnceleme Güncelleme Fonksiyonu
 export const updateReview = async (targetId, updateData) => {
   try {
-    const BASE_URL = " https://react-strapi-game-critic-site.onrender.com";
+    const BASE_URL = STRAPI_URL;
     const token =
       localStorage.getItem("jwt") ||
       localStorage.getItem("token") ||

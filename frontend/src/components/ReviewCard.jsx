@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getStrapiMedia } from "../api";
 import ScoreBadge from "./ScoreBadge";
-import { AdvanceIcon } from "../components/icons";
+import { AdvanceIcon } from "./icons";
+
 const ReviewCard = ({ review }) => {
   const data = review.attributes || review;
   const imageUrl = getStrapiMedia(data.coverImage);
@@ -38,7 +39,6 @@ const ReviewCard = ({ review }) => {
             <ScoreBadge score={data.score} />
           </div>
 
-          {/* İmza öğesi: kalibrasyon damgası */}
           <div className="absolute bottom-4 right-4 z-10 rotate-[-6deg] border border-zinc-500/40 text-zinc-400/70 text-[8px] font-data tracking-[0.2em] px-2 py-0.5 uppercase opacity-70 group-hover:opacity-100 group-hover:border-phosphor/50 group-hover:text-phosphor transition-all">
             İncelendi
           </div>

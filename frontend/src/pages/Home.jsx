@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigationType } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
-import { AdvanceIcon, PeakIcon } from "../components/icons";
+import { PeakIcon, AdvanceIcon } from "../components/icons";
 import About from "../components/About";
 
 const Home = () => {
