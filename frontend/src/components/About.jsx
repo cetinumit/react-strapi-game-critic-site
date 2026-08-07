@@ -28,7 +28,7 @@ const About = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div className="bg-panel/80 backdrop-blur-sm border border-line p-8 hover:border-phosphor/40 transition-colors group">
             <div className="inline-flex p-3 bg-phosphor/10 text-phosphor mb-6 border border-phosphor/20 group-hover:scale-110 transition-transform">
-              <Code2 className="w-6 h-6" />
+              <TraceIcon className="w-6 h-6" />
             </div>
             <h3 className="text-white font-gaming font-black tracking-widest uppercase mb-6 border-b border-line pb-4 text-sm">
               Geliştirme & Yönetim
@@ -53,7 +53,7 @@ const About = () => {
 
           <div className="bg-panel/80 backdrop-blur-sm border border-line p-8 hover:border-amber-500/40 transition-colors group">
             <div className="inline-flex p-3 bg-amber-500/10 text-amber-400 mb-6 border border-amber-500/20 group-hover:scale-110 transition-transform">
-              <PenTool className="w-6 h-6" />
+              <LayoutMarkIcon className="w-6 h-6" />
             </div>
             <h3 className="text-white font-gaming font-black tracking-widest uppercase mb-6 border-b border-line pb-4 text-sm">
               Yayın Kadrosu
@@ -78,14 +78,14 @@ const About = () => {
 
           <div className="bg-panel/80 backdrop-blur-sm border border-line p-8 hover:border-zinc-500/40 transition-colors group">
             <div className="inline-flex p-3 bg-zinc-700/20 text-zinc-300 mb-6 border border-zinc-600/30 group-hover:scale-110 transition-transform">
-              <Globe className="w-6 h-6" />
+              <SignalIcon className="w-6 h-6" />
             </div>
             <h3 className="text-white font-gaming font-black tracking-widest uppercase mb-6 border-b border-line pb-4 text-sm">
               Bize Ulaşın
             </h3>
             <div className="space-y-5 text-sm">
               <div className="flex items-start gap-3">
-                <Mail className="w-4 h-4 text-zinc-500 mt-0.5" />
+                <ChannelIcon className="w-4 h-4 text-zinc-500 mt-0.5" />
                 <div>
                   <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-1 font-data">
                     İletişim & Reklam
@@ -99,7 +99,7 @@ const About = () => {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-zinc-500 mt-0.5" />
+                <CoordinateIcon className="w-4 h-4 text-zinc-500 mt-0.5" />
                 <div>
                   <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-1 font-data">
                     Yönetim Yeri

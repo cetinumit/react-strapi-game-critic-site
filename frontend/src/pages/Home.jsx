@@ -154,7 +154,7 @@ const Home = () => {
                 className="inline-flex items-center gap-3 bg-white hover:bg-phosphor text-black font-gaming font-black px-8 py-4 tracking-widest uppercase text-xs transform hover:-translate-y-0.5 transition-all duration-200"
               >
                 <span>DEVAMINI OKU</span>
-                <ArrowUpRight className="w-4 h-4" />
+                <AdvanceIcon className="w-4 h-4" />
               </Link>
             </div>
           </div>

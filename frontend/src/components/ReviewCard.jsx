@@ -59,7 +59,7 @@ const ReviewCard = ({ review }) => {
           İNCELEMEYİ OKU
         </span>
         <div className="w-8 h-8 border border-line flex items-center justify-center group-hover:bg-phosphor group-hover:text-black group-hover:border-phosphor transition-all duration-200">
-          <ArrowUpRight className="w-4 h-4" />
+          <AdvanceIcon className="w-4 h-4" />
         </div>
       </div>
     </Link>

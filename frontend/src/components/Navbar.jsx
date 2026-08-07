@@ -103,7 +103,7 @@ const Navbar = () => {
           {isAuth ? (
             <div className="flex items-center gap-3 bg-zinc-900/80 border border-zinc-800 p-1.5 rounded-lg">
               <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-300 px-3 py-1 bg-zinc-800/50 rounded-md font-gaming">
-                <User className="w-3.5 h-3.5 text-phosphor" />
+                <OperatorIcon className="w-3.5 h-3.5 text-phosphor" />
                 {user?.username || "EDİTÖR"}
               </span>
 
@@ -111,7 +111,7 @@ const Navbar = () => {
                 to="/new-review"
                 className="flex items-center gap-1.5 bg-white hover:bg-zinc-200 text-black text-xs font-extrabold px-4 py-2 rounded-sm transition-all uppercase tracking-wider font-gaming"
               >
-                <PlusCircle className="w-4 h-4 text-black" />
+                <AddEntryIcon className="w-4 h-4 text-black" />
                 <span className="hidden sm:inline">YENİ İNCELEME</span>
               </Link>
 
@@ -120,7 +120,7 @@ const Navbar = () => {
                 title="Çıkış Yap"
                 className="p-2 text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-md transition-colors"
               >
-                <LogOut className="w-4 h-4" />
+                <ExitIcon className="w-4 h-4" />
               </button>
             </div>
           ) : (

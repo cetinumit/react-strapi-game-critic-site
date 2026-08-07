@@ -39,7 +39,7 @@ const Login = () => {
 
       <div className="text-center mb-8 pt-4">
         <div className="inline-flex p-3 bg-phosphor/10 text-phosphor mb-4 border border-phosphor/20">
-          <Lock className="w-7 h-7" />
+          <SecureNodeIcon className="w-7 h-7" />
         </div>
         <h1 className="text-2xl font-black text-white font-gaming uppercase tracking-tight">
           Editör Girişi
@@ -51,7 +51,7 @@ const Login = () => {
 
       {error && (
         <div className="mb-6 p-3 bg-critical/10 border border-critical/30 text-critical text-xs flex items-center gap-2.5">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <WarningIcon className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}
@@ -62,7 +62,7 @@ const Login = () => {
             E-Posta veya Kullanıcı Adı
           </label>
           <div className="relative">
-            <Mail className="w-4 h-4 text-zinc-600 absolute left-0 top-3" />
+            <ChannelIcon className="w-4 h-4 text-zinc-600 absolute left-0 top-3" />
             <input
               type="text"
               required
@@ -79,7 +79,7 @@ const Login = () => {
             Şifre
           </label>
           <div className="relative">
-            <Lock className="w-4 h-4 text-zinc-600 absolute left-0 top-3" />
+            <KeyMarkIcon className="w-4 h-4 text-zinc-600 absolute left-0 top-3" />
             <input
               type="password"
               required
@@ -98,7 +98,7 @@ const Login = () => {
         >
           <span>{loading ? "DOĞRULANIYOR..." : "DOĞRULA"}</span>
           {!loading && (
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <AdvanceIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           )}
         </button>
       </form>

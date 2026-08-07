@@ -89,7 +89,7 @@ const ReviewDetail = () => {
       <div className="bg-void min-h-screen flex items-center justify-center p-4">
         <div className="max-w-md w-full p-8 bg-panel border border-line text-center">
           <div className="inline-flex p-4 bg-critical/10 text-critical mb-6">
-            <XCircle className="w-10 h-10" />
+            <FaultIcon className="w-10 h-10" />
           </div>
           <h2 className="text-2xl font-black text-white mb-3 font-gaming tracking-widest uppercase">
             Hata!
@@ -99,7 +99,7 @@ const ReviewDetail = () => {
             to="/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-phosphor text-black text-xs font-black uppercase tracking-widest transition-all font-gaming"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ReturnIcon className="w-4 h-4" />
             Ana Sayfaya Dön
           </Link>
         </div>
@@ -211,7 +211,7 @@ const ReviewDetail = () => {
             onClick={() => navigate(-1)}
             className="inline-flex items-center gap-2 text-zinc-300 hover:text-black hover:bg-phosphor bg-void/60 backdrop-blur-md px-4 py-2.5 border border-line hover:border-phosphor transition-all font-gaming text-xs font-black tracking-widest uppercase cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ReturnIcon className="w-4 h-4" />
             GERİ DÖN
           </button>
         </div>
@@ -229,14 +229,14 @@ const ReviewDetail = () => {
             <div className="flex flex-wrap items-center gap-4">
               <div className="inline-flex flex-wrap items-center gap-4 text-xs text-zinc-400 font-data bg-panel/80 backdrop-blur-sm px-4 py-2.5 border border-line">
                 <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-phosphor" />
+                  <SignatureIcon className="w-4 h-4 text-phosphor" />
                   <span className="font-bold tracking-widest uppercase text-zinc-200">
                     EDİTÖR İNCELEMESİ
                   </span>
                 </div>
                 <div className="w-1 h-1 bg-zinc-600 rounded-full hidden sm:block"></div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-phosphor" />
+                  <TimestampIcon className="w-4 h-4 text-phosphor" />
                   <span className="font-bold tracking-widest uppercase text-zinc-200">
                     {formattedDate}
                   </span>
@@ -250,7 +250,7 @@ const ReviewDetail = () => {
                     replace={true}
                     className="inline-flex items-center gap-2 bg-phosphor/10 hover:bg-phosphor text-phosphor hover:text-black px-4 py-2.5 border border-phosphor/50 hover:border-phosphor transition-all font-gaming text-xs font-black tracking-widest uppercase"
                   >
-                    <Edit3 className="w-4 h-4" />
+                    <RevisionIcon className="w-4 h-4" />
                     DÜZENLE
                   </Link>
 
@@ -258,7 +258,7 @@ const ReviewDetail = () => {
                     onClick={() => handleDelete(targetIdForDelete)}
                     className="inline-flex items-center gap-2 bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-black px-4 py-2.5 border border-amber-500/50 hover:border-amber-500 transition-all font-gaming text-xs font-black tracking-widest uppercase"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <RejectStampIcon className="w-4 h-4" />
                     İNCELEMEYİ SİL
                   </button>
                 </div>
@@ -297,7 +297,7 @@ const ReviewDetail = () => {
             {prosList.length > 0 && (
               <div className="bg-panel border-l-2 border-phosphor p-6 sm:p-8">
                 <h3 className="text-phosphor font-gaming text-sm font-black tracking-widest uppercase mb-6 flex items-center gap-3 border-b border-line pb-4">
-                  <PlusCircle className="w-5 h-5" />
+                  <GainIcon className="w-5 h-5" />
                   ARTILARI
                 </h3>
                 <ul className="space-y-4">
@@ -319,7 +319,7 @@ const ReviewDetail = () => {
             {consList.length > 0 && (
               <div className="bg-panel border-l-2 border-amber-500 p-6 sm:p-8">
                 <h3 className="text-amber-400 font-gaming text-sm font-black tracking-widest uppercase mb-6 flex items-center gap-3 border-b border-line pb-4">
-                  <MinusCircle className="w-5 h-5" />
+                  <LossIcon className="w-5 h-5" />
                   EKSİLERİ
                 </h3>
                 <ul className="space-y-4">
