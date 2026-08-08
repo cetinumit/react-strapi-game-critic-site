@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  AddEntryIcon,
-  ExitIcon,
-  AccessIcon,
-  OperatorIcon,
-} from "../components/icons";
+import { Menu, X } from "lucide-react";
+import { AddEntryIcon, ExitIcon, AccessIcon, OperatorIcon } from "./icons";
 import { isAuthenticated, getCurrentUser, logoutUser } from "../api";
+// 84x84 kaynak, CSS ile 28px gösteriliyor — her ekran yoğunluğunda net kalsın diye
+import logo from "../assets/logo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const isAuth = isAuthenticated();
   const user = getCurrentUser();
+
+  // Rota değişince mobil menü açık kalmasın
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
+  // Escape ile kapat
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   const handleLogout = () => {
     logoutUser();
@@ -21,17 +33,17 @@ const Navbar = () => {
     window.location.reload();
   };
 
+  const scrollToLatest = () =>
+    document.getElementById("latest")?.scrollIntoView({ behavior: "smooth" });
+
   const handleReviewsClick = (e) => {
     e.preventDefault();
+    setMenuOpen(false);
     if (location.pathname === "/") {
-      document.getElementById("latest")?.scrollIntoView({ behavior: "smooth" });
+      scrollToLatest();
     } else {
       navigate("/");
-      setTimeout(() => {
-        document
-          .getElementById("latest")
-          ?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      setTimeout(scrollToLatest, 100);
     }
   };
 
@@ -39,89 +51,156 @@ const Navbar = () => {
   const isReviewsActive =
     location.pathname.startsWith("/review") || location.hash === "#latest";
 
-  return (
-    <header className="sticky top-0 z-50 bg-void/90 backdrop-blur-md border-b border-line transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-white text-black flex items-center justify-center font-black text-xl font-gaming tracking-tighter rounded-sm transform group-hover:scale-105 transition-transform duration-300">
-            TC
-          </div>
-          <div className="flex flex-col">
-            <span className="text-white font-black text-xl tracking-wider font-gaming uppercase">
-              TECH<span className="text-zinc-500">CRITIC</span>
-            </span>
-            <span className="text-[9px] text-zinc-400 tracking-[0.2em] uppercase -mt-1 font-semibold">
-              İnceleme Portalı
-            </span>
-          </div>
+  const linkClass = (active) =>
+    `transition-colors ${active ? "text-white" : "text-zinc-400 hover:text-white"}`;
+
+  // Masaüstü ve mobil aynı aksiyonları paylaşıyor, sadece yerleşim değişiyor
+  const renderActions = (mobile) =>
+    isAuth ? (
+      <>
+        <span
+          className={`items-center gap-1.5 h-8 px-3 bg-panel border border-line text-[11px] font-data uppercase tracking-wider text-zinc-300 ${
+            mobile ? "hidden" : "hidden lg:flex"
+          }`}
+        >
+          <OperatorIcon className="w-3.5 h-3.5 text-phosphor" />
+          {user?.username || "EDİTÖR"}
+        </span>
+
+        <Link
+          to="/new-review"
+          onClick={() => setMenuOpen(false)}
+          className={`flex items-center justify-center gap-1.5 h-8 px-3 bg-phosphor hover:bg-phosphor-dim text-black text-[11px] font-data font-bold uppercase tracking-wider transition-colors ${
+            mobile ? "flex-1" : ""
+          }`}
+        >
+          <AddEntryIcon className="w-3.5 h-3.5 text-black" />
+          YENİ İNCELEME
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-zinc-400 font-gaming">
+        <button
+          onClick={handleLogout}
+          title="Çıkış Yap"
+          aria-label="Çıkış Yap"
+          className={`flex items-center justify-center h-8 border border-line text-zinc-400 hover:text-amber hover:border-amber/40 transition-colors ${
+            mobile ? "px-4" : "w-8"
+          }`}
+        >
+          <ExitIcon className="w-4 h-4" />
+        </button>
+      </>
+    ) : (
+      <Link
+        to="/login"
+        onClick={() => setMenuOpen(false)}
+        className={`flex items-center justify-center gap-2 h-8 px-4 bg-phosphor/10 hover:bg-phosphor hover:text-black border border-phosphor/30 hover:border-phosphor text-phosphor text-[11px] font-data uppercase tracking-wider transition-colors group ${
+          mobile ? "flex-1" : ""
+        }`}
+      >
+        <AccessIcon className="w-3.5 h-3.5" />
+        EDİTÖR GİRİŞİ
+      </Link>
+    );
+
+  return (
+    <header className="sticky top-0 z-50 bg-void/90 backdrop-blur-md border-b border-line">
+      <div className="max-w-[1248px] mx-auto px-4 sm:px-6">
+        {/* Üst çubuk: 56px yükseklik, 12px dikey padding */}
+        <div className="h-14 flex items-center gap-5">
           <Link
             to="/"
-            className={`transition-colors py-2 border-b-2 ${
-              isHomeActive
-                ? "text-white border-white"
-                : "text-zinc-400 border-transparent hover:text-white hover:border-line"
-            }`}
+            className="flex items-center gap-2.5 shrink-0 group"
+            onClick={() => setMenuOpen(false)}
           >
-            ANA SAYFA
+            <img
+              src={logo}
+              width={28}
+              height={28}
+              alt=""
+              className="w-7 h-7 group-hover:scale-105 transition-transform duration-300"
+            />
+            <span className="text-white font-gaming font-black text-base tracking-wider uppercase">
+              TECH<span className="text-zinc-500">CRITIC</span>
+            </span>
           </Link>
 
-          <a
-            href="#latest"
-            onClick={handleReviewsClick}
-            className={`transition-colors py-2 border-b-2 cursor-pointer ${
-              isReviewsActive
-                ? "text-white border-white"
-                : "text-zinc-400 border-transparent hover:text-white hover:border-line"
-            }`}
+          <span
+            className="hidden md:block text-zinc-700 font-data select-none"
+            aria-hidden="true"
           >
-            İNCELEMELER
-          </a>
+            /
+          </span>
 
-          <a
-            href="/#about"
-            className="text-zinc-400 border-transparent hover:text-white transition-colors py-2 border-b-2 hover:border-line"
-          >
-            HAKKIMIZDA
-          </a>
-        </nav>
-
-        <div className="flex items-center gap-4">
-          {isAuth ? (
-            <div className="flex items-center gap-3 bg-panel border border-line p-1.5">
-              <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-300 px-3 py-1 bg-panel-raised font-gaming">
-                <OperatorIcon className="w-3.5 h-3.5 text-phosphor" />
-                {user?.username || "EDİTÖR"}
-              </span>
-
-              <Link
-                to="/new-review"
-                className="flex items-center gap-1.5 bg-white hover:bg-zinc-200 text-black text-xs font-extrabold px-4 py-2 transition-all uppercase tracking-wider font-gaming"
-              >
-                <AddEntryIcon className="w-4 h-4 text-black" />
-                <span className="hidden sm:inline">YENİ İNCELEME</span>
-              </Link>
-
-              <button
-                onClick={handleLogout}
-                title="Çıkış Yap"
-                className="p-2 text-zinc-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
-              >
-                <ExitIcon className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
+          <nav className="hidden md:flex items-center gap-5 font-data text-[11px] uppercase tracking-wider">
             <Link
-              to="/login"
-              className="flex items-center gap-2 bg-zinc-900 hover:bg-white text-zinc-300 hover:text-black text-xs font-bold px-5 py-2.5 border border-line hover:border-white transition-all duration-300 uppercase tracking-widest font-gaming group"
+              to="/"
+              className={linkClass(isHomeActive)}
+              aria-current={isHomeActive ? "page" : undefined}
             >
-              <AccessIcon className="w-3.5 h-3.5 text-phosphor group-hover:text-black transition-colors" />
-              <span>EDİTÖR GİRİŞİ</span>
+              ANA SAYFA
             </Link>
-          )}
+            <a
+              href="#latest"
+              onClick={handleReviewsClick}
+              className={`cursor-pointer ${linkClass(isReviewsActive)}`}
+            >
+              İNCELEMELER
+            </a>
+            <a href="/#about" className={linkClass(false)}>
+              HAKKIMIZDA
+            </a>
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
+              {renderActions(false)}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              className="md:hidden flex items-center justify-center w-8 h-8 -mr-1 text-zinc-300 hover:text-white transition-colors"
+              aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
+              aria-expanded={menuOpen}
+              aria-controls="mobil-menu"
+            >
+              {menuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Mobil panel: çubuğun altında açılır, içeriği aşağı iter */}
+        {menuOpen && (
+          <div id="mobil-menu" className="md:hidden border-t border-line pb-6">
+            <nav className="flex flex-col font-data text-sm uppercase tracking-wider">
+              <Link
+                to="/"
+                className={`py-4 ${linkClass(isHomeActive)}`}
+                aria-current={isHomeActive ? "page" : undefined}
+              >
+                ANA SAYFA
+              </Link>
+              <a
+                href="#latest"
+                onClick={handleReviewsClick}
+                className={`py-4 cursor-pointer ${linkClass(isReviewsActive)}`}
+              >
+                İNCELEMELER
+              </a>
+              <a href="/#about" className={`py-4 ${linkClass(false)}`}>
+                HAKKIMIZDA
+              </a>
+            </nav>
+
+            <div className="flex items-stretch gap-3 pt-4">
+              {renderActions(true)}
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
