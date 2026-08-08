@@ -39,7 +39,9 @@ const About = () => {
   return (
     <section id="about" className="py-20 sm:py-28">
       {/* overflow-hidden şart: logonun kart sınırından taşan kısmını kesen bu */}
-      <div className="relative overflow-hidden bg-panel border border-line">
+      {/* bg-transparent: sayfa arkaplanının aynısı olsun diye renk vermiyoruz,
+          kartı yalnızca ince kenarlık tanımlıyor */}
+      <div className="relative overflow-hidden bg-transparent border border-line">
         {/*
           Sağ kenardan taşan logo. İki ayar birlikte çalışıyor:
           - translate-x-[40%]  -> yaklaşık ortasından kesilmesini sağlıyor
@@ -52,7 +54,7 @@ const About = () => {
           alt=""
           aria-hidden="true"
           loading="lazy"
-          className="pointer-events-none select-none absolute right-0 top-1/2 hidden -translate-y-1/2 translate-x-[40%] w-[560px] opacity-90 sm:block lg:w-[760px] [mask-image:linear-gradient(to_left,black_35%,transparent_85%)] [-webkit-mask-image:linear-gradient(to_left,black_35%,transparent_85%)]"
+          className="pointer-events-none select-none absolute right-0 top-1/2 hidden -translate-y-1/2 translate-x-[35%] -rotate-[25deg] w-[680px] opacity-90 sm:block lg:w-[900px] [mask-image:linear-gradient(to_left,black_35%,transparent_85%)] [-webkit-mask-image:linear-gradient(to_left,black_35%,transparent_85%)]"
         />
 
         {/* z-10: metin her koşulda logonun üstünde kalsın */}
