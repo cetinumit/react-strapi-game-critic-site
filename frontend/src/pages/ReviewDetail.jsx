@@ -146,45 +146,89 @@ const ReviewDetail = () => {
       ));
     }
     if (Array.isArray(content)) {
+      // Satır içi metin + biçimleri (kalın/italik/üstü çizili/kod) tek yerde
+      const inline = (children = []) =>
+        children.map((child, i) => {
+          if (child.type === "link")
+            return (
+              <React.Fragment key={i}>{inline(child.children)}</React.Fragment>
+            );
+          const cls = [
+            child.bold && "font-black text-white font-gaming tracking-wide",
+            child.italic && "italic text-zinc-400",
+            child.strikethrough && "line-through opacity-70",
+            child.code && "font-data text-phosphor bg-void px-1.5 py-0.5",
+          ]
+            .filter(Boolean)
+            .join(" ");
+          return (
+            <span key={i} className={cls}>
+              {child.text}
+            </span>
+          );
+        });
+
       return content.map((block, index) => {
-        if (block.type === "paragraph") {
-          return (
-            <p
-              key={index}
-              className="mb-6 text-zinc-300 leading-relaxed font-light text-lg"
-            >
-              {block.children?.map((child, i) => (
-                <span
-                  key={i}
-                  className={
-                    child.bold
-                      ? "font-black text-white font-gaming tracking-wide"
-                      : child.italic
-                        ? "italic text-zinc-400"
-                        : ""
-                  }
-                >
-                  {child.text}
-                </span>
-              ))}
-            </p>
-          );
+        switch (block.type) {
+          case "heading":
+            return (
+              <h3
+                key={index}
+                className="text-2xl sm:text-3xl font-black text-white mt-12 mb-6 border-l-4 border-phosphor pl-4 font-gaming uppercase tracking-tight"
+              >
+                {inline(block.children)}
+              </h3>
+            );
+
+          case "quote":
+            return (
+              <blockquote
+                key={index}
+                className="my-8 pl-6 py-4 border-l-4 border-phosphor bg-gradient-to-r from-phosphor/5 to-transparent text-zinc-300 italic text-lg leading-relaxed"
+              >
+                {inline(block.children)}
+              </blockquote>
+            );
+
+          case "list": {
+            const Tag = block.format === "ordered" ? "ol" : "ul";
+            return (
+              <Tag
+                key={index}
+                className={`mb-6 pl-6 space-y-2 text-zinc-300 leading-relaxed font-light text-lg marker:text-phosphor ${
+                  block.format === "ordered" ? "list-decimal" : "list-disc"
+                }`}
+              >
+                {block.children?.map((li, i) => (
+                  <li key={i}>{inline(li.children)}</li>
+                ))}
+              </Tag>
+            );
+          }
+
+          case "code":
+            return (
+              <pre
+                key={index}
+                className="mb-6 p-4 bg-void border border-line overflow-x-auto font-data text-sm text-zinc-300"
+              >
+                <code>{block.children?.map((c) => c.text).join("")}</code>
+              </pre>
+            );
+
+          case "paragraph":
+          default:
+            // Tanımadığımız bir blok gelirse ham JSON basmak yerine
+            // metnini paragraf olarak gösteriyoruz
+            return (
+              <p
+                key={index}
+                className="mb-6 text-zinc-300 leading-relaxed font-light text-lg"
+              >
+                {inline(block.children)}
+              </p>
+            );
         }
-        if (block.type === "heading") {
-          return (
-            <h3
-              key={index}
-              className="text-2xl sm:text-3xl font-black text-white mt-12 mb-6 border-l-4 border-phosphor pl-4 font-gaming uppercase tracking-tight"
-            >
-              {block.children?.map((child) => child.text).join(" ")}
-            </h3>
-          );
-        }
-        return (
-          <div key={index} className="mb-4 text-zinc-500 text-sm">
-            {JSON.stringify(block)}
-          </div>
-        );
       });
     }
     return null;

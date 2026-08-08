@@ -65,7 +65,11 @@ const MenuBar = ({ editor }) => {
 
 const TiptapEditor = ({ value, onChange }) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      // horizontalRule'un Strapi Blocks'ta karşılığı yok; StarterKit'in
+      // "---" kısayolu yüzünden kazayla oluşup kaydı bozabiliyor.
+      StarterKit.configure({ horizontalRule: false }),
+    ],
     // Strapi'den gelen JSON'ı Tiptap'ın okuyabileceği formata çevirip veriyoruz
     content: value ? strapiToTiptap(value) : "",
     onUpdate: ({ editor }) => {
