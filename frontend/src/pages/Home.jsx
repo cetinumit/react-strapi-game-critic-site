@@ -82,6 +82,9 @@ const Home = () => {
           setIsRestored(true);
         }
       } else {
+        // Yeni gezinme: kaydedilmiş konum artık geçersiz, silelim ki
+        // ileride bayat bir değere geri yüklemeye çalışmayalım
+        sessionStorage.removeItem("homeScrollPosition");
         window.scrollTo({ top: 0, behavior: "instant" });
         setIsRestored(true);
       }
@@ -90,7 +93,9 @@ const Home = () => {
 
   useEffect(() => {
     if (!isRestored) return;
-    sessionStorage.setItem("homeScrollPosition", window.scrollY);
+    // Yalnızca kullanıcının kendi kaydırdığı gerçek konumları yazıyoruz.
+    // Geri yükleme anında yazsaydık, sayfa hedefe yetecek kadar uzamamışsa
+    // tarayıcının kırptığı küçük değer kaydedilir ve her turda aşınırdı.
     const handleScroll = () => {
       sessionStorage.setItem("homeScrollPosition", window.scrollY);
     };
