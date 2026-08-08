@@ -11,6 +11,7 @@ import {
   LayoutMarkIcon,
   SignatureIcon,
 } from "../components/icons";
+import { usePageMeta } from "../hooks/usePageMeta";
 import TiptapEditor from "../components/TiptapEditor";
 
 // Strapi'nin Blocks alanı dizi bekliyor; içinde gerçekten metin var mı?
@@ -155,6 +156,8 @@ const CreateReview = () => {
       setLoading(false);
     }
   };
+
+  usePageMeta({ title: "Yeni İnceleme Ekle", path: "/new-review" });
 
   return (
     <div className="max-w-3xl mx-auto py-8 animate-fade-in">

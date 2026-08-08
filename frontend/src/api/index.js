@@ -83,9 +83,37 @@ export const loginUser = async (identifier, password) => {
   }
 };
 
+// JWT'nin payload'ını çözüp son kullanma tarihini okur.
+// Sunucuya sormuyoruz bilerek: Render uykudayken veya /users/me izni
+// kapalıyken geçerli editörü sistemden atmasın. Zaten asıl yetki kontrolü
+// sunucuda; bu sadece süresi dolmuş token'la boş ekranda kalmayı önlüyor.
+const isTokenExpired = (token) => {
+  try {
+    const payload = JSON.parse(
+      atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+    );
+    // exp saniye cinsinden; yoksa karar veremiyoruz, süresi dolmamış sayıyoruz
+    if (!payload.exp) return false;
+    return payload.exp * 1000 <= Date.now();
+  } catch {
+    // Çözülemeyen token'ı burada geçerli sayıyoruz; sunucu nasılsa reddeder
+    return false;
+  }
+};
+
 // Mevcut kullanıcının giriş yapıp yapmadığını kontrol eden yardımcı
 export const isAuthenticated = () => {
-  return !!localStorage.getItem("jwt");
+  const token = localStorage.getItem("jwt");
+  if (!token) return false;
+
+  if (isTokenExpired(token)) {
+    // Bayat token'ı temizle ki her sayfada tekrar tekrar denemesin
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("user");
+    return false;
+  }
+
+  return true;
 };
 
 // Mevcut kullanıcı bilgilerini getir

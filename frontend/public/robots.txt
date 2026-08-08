@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Editör alanları arama sonuçlarına çıkmasın
+Disallow: /login
+Disallow: /new-review
+Disallow: /edit/
+
+Sitemap: https://techcritic.netlify.app/sitemap.xml

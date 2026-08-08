@@ -1,0 +1,9 @@
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# Not: Content-Security-Policy bilerek eklenmedi. Site Google Fonts,
+# Cloudinary ve Render'daki Strapi'ye dışarıdan bağlanıyor; eksik bir CSP
+# bunları sessizce kesip siteyi bozar. Eklenecekse tek tek test edilmeli.

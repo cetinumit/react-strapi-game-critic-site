@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePageMeta } from "../hooks/usePageMeta";
 import { loginUser } from "../api";
 import {
   SecureNodeIcon,
@@ -31,6 +32,8 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  usePageMeta({ title: "Editör Girişi", path: "/login" });
 
   return (
     <div className="max-w-md mx-auto my-16 p-8 bg-panel border border-line animate-fade-in relative">

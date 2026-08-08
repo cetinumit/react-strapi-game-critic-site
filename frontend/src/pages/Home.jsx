@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigationType } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
+import { usePageMeta } from "../hooks/usePageMeta";
 import ReviewCard from "../components/ReviewCard";
 import { PeakIcon, AdvanceIcon } from "../components/icons";
 import About from "../components/About";
@@ -102,6 +103,12 @@ const Home = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isRestored]);
+
+  usePageMeta({
+    description:
+      "Oyun ve donanım incelemeleri, puanlamalar ve e-spor gündemi. Bağımsız, şeffaf ve analitik bakış.",
+    path: "/",
+  });
 
   const featuredReview =
     reviews.length > 0 ? reviews[0].attributes || reviews[0] : null;

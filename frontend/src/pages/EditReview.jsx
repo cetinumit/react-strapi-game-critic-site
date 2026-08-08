@@ -15,6 +15,7 @@ import {
   GainIcon,
   LossIcon,
 } from "../components/icons";
+import { usePageMeta } from "../hooks/usePageMeta";
 import TiptapEditor from "../components/TiptapEditor";
 
 // CreateReview ile aynı alan görünümü
@@ -140,6 +141,9 @@ const EditReview = () => {
       setSaving(false);
     }
   };
+
+  // Hook koşulsuz çalışmalı: aşağıdaki erken dönüşten önce
+  usePageMeta({ title: "İncelemeyi Düzenle", path: `/edit/${slug}` });
 
   if (loading) {
     return (

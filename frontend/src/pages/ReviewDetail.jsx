@@ -6,6 +6,7 @@ import {
   isAuthenticated,
   deleteReview,
 } from "../api";
+import { usePageMeta } from "../hooks/usePageMeta";
 import ScoreBadge from "../components/ScoreBadge";
 import {
   ReturnIcon,
@@ -65,6 +66,16 @@ const ReviewDetail = () => {
       }
     }
   };
+
+  // Hook erken dönüşlerden önce, koşulsuz çağrılmalı; bu yüzden veriyi
+  // aşağıdaki `data` yerine doğrudan state'ten türetiyoruz
+  const meta = review ? review.attributes || review : null;
+  usePageMeta({
+    title: meta?.title,
+    description: meta?.summary,
+    image: meta ? getStrapiMedia(meta.coverImage) || undefined : undefined,
+    path: `/review/${slug}`,
+  });
 
   if (loading) {
     return (
