@@ -38,46 +38,45 @@ const SEGMENTS = [
 const About = () => {
   return (
     <section id="about" className="py-20 sm:py-28">
-      {/* overflow-hidden şart: logonun kart sınırından taşan yarısını kesen bu */}
+      {/* overflow-hidden şart: logonun kart sınırından taşan kısmını kesen bu */}
       <div className="relative overflow-hidden bg-panel border border-line">
-        {/* Sağ kenardan yarısı dışarı taşıyor; translate-x-1/2 tam ortadan kesiyor.
-            Görünürlüğü değiştirmek istersen tek ayar noktası: opacity-20 */}
+        {/*
+          Sağ kenardan taşan logo. İki ayar birlikte çalışıyor:
+          - translate-x-[40%]  -> yaklaşık ortasından kesilmesini sağlıyor
+          - mask-image         -> sola doğru söndürüyor. Bu olmadan parlak fosfor
+            çizgiler "Bize Ulaşın" sütununun altında kalıp yazıyı okunmaz yapıyor.
+            Sağ kenarda tam parlaklıkta, metne yaklaşırken kayboluyor.
+        */}
         <img
           src="/logo-512.png"
           alt=""
           aria-hidden="true"
           loading="lazy"
-          className="pointer-events-none select-none absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-[320px] lg:w-[440px] opacity-20 hidden sm:block"
+          className="pointer-events-none select-none absolute right-0 top-1/2 hidden -translate-y-1/2 translate-x-[40%] w-[560px] opacity-90 sm:block lg:w-[760px] [mask-image:linear-gradient(to_left,black_35%,transparent_85%)] [-webkit-mask-image:linear-gradient(to_left,black_35%,transparent_85%)]"
         />
 
-        <div className="relative p-8 sm:p-12 lg:p-16">
-          {/* Başlık ve kısa tanıtım — sol üstte */}
-          <h2 className="text-3xl sm:text-5xl font-black text-white font-gaming uppercase tracking-tighter">
-            TECH<span className="text-zinc-600">CRITIC</span> KÜNYE
+        {/* z-10: metin her koşulda logonun üstünde kalsın */}
+        <div className="relative z-10 p-8 sm:p-12 lg:p-16">
+          <h2 className="text-4xl sm:text-5xl font-black text-phosphor font-gaming uppercase tracking-tighter">
+            Hakkımızda
           </h2>
-          <p className="mt-5 max-w-xl text-sm sm:text-base text-zinc-400 leading-relaxed">
+          <p className="mt-6 max-w-xl text-base text-zinc-300 leading-relaxed">
             Dijital oyun kültürünü, donanım dünyasını ve e-spor ekosistemini
             bağımsız, şeffaf ve analitik bir bakış açısıyla inceliyoruz.
           </p>
 
-          {/* Segmentler: solda başlık, sağda içerik, aralarında ince çizgi */}
-          <div className="mt-14 sm:mt-20 border-t border-line">
+          {/* Üç segment yan yana: şeffaf zemin, başlık altında ince çizgi */}
+          <div className="mt-16 sm:mt-20 grid gap-10 sm:gap-12 sm:grid-cols-2 lg:grid-cols-3">
             {SEGMENTS.map((segment) => (
-              <div
-                key={segment.title}
-                className="grid gap-x-10 gap-y-6 border-b border-line py-8 md:grid-cols-[200px_1fr]"
-              >
-                <h3 className="font-gaming text-xs font-black uppercase tracking-widest text-white">
+              <div key={segment.title}>
+                <h3 className="border-b border-line pb-4 font-gaming text-sm font-black uppercase tracking-widest text-white">
                   {segment.title}
                 </h3>
 
-                <dl className="space-y-6">
+                <dl className="mt-6 space-y-6">
                   {segment.rows.map((row) => (
-                    <div
-                      key={row.label}
-                      className="grid gap-x-8 gap-y-1 sm:grid-cols-[220px_1fr]"
-                    >
-                      <dt className="font-data text-[10px] uppercase tracking-widest text-zinc-500 pt-1">
+                    <div key={row.label}>
+                      <dt className="mb-1.5 font-data text-[10px] uppercase tracking-widest text-zinc-500">
                         {row.label}
                       </dt>
                       <dd className="space-y-1 text-sm text-zinc-200">
@@ -103,7 +102,7 @@ const About = () => {
           </div>
 
           {/* Telif */}
-          <p className="mt-10 max-w-3xl text-xs leading-relaxed text-zinc-600">
+          <p className="mt-16 max-w-3xl border-t border-line pt-8 text-xs leading-relaxed text-zinc-600">
             Bu yayının dijital operasyonları ve altyapısı bağımsız olarak
             yönetilmektedir. TechCritic sitesinde yayımlanan inceleme, haber ve
             materyallerin her türlü telif hakkı saklıdır. İzin alınmadan kaynak
