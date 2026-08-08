@@ -10,9 +10,18 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const isAuth = isAuthenticated();
   const user = getCurrentUser();
+
+  // Tepedeyken navbar siteyle iç içe dursun; kaydırınca zemin + çizgi belirsin
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Rota değişince mobil menü açık kalmasın
   useEffect(() => {
@@ -103,8 +112,16 @@ const Navbar = () => {
     );
 
   return (
-    <header className="sticky top-0 z-50 bg-void/90 backdrop-blur-md border-b border-line">
-      <div className="max-w-[1248px] mx-auto px-4 sm:px-6">
+    // border-b hep duruyor, sadece rengi değişiyor — belirirken 1px kayma olmasın diye
+    <header
+      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+        scrolled || menuOpen
+          ? "bg-void/90 backdrop-blur-md border-line"
+          : "bg-transparent border-transparent"
+      }`}
+    >
+      {/* MainLayout ve Footer ile aynı konteyner — soldan sağda içerikle hizalı dursun */}
+      <div className="max-w-6xl mx-auto px-6">
         {/* Üst çubuk: 56px yükseklik, 12px dikey padding */}
         <div className="h-14 flex items-center gap-5">
           <Link
