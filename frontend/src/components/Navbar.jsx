@@ -42,17 +42,16 @@ const Navbar = () => {
     window.location.reload();
   };
 
-  const scrollToLatest = () =>
-    document.getElementById("latest")?.scrollIntoView({ behavior: "smooth" });
-
-  const handleReviewsClick = (e) => {
+  // Çapa linkleri: URL'e hash yazmıyoruz. Yazsaydık Home'un kaydırma geri
+  // yükleme efekti navType değişimiyle tetiklenip sayfayı tepeye atardı.
+  const handleAnchorClick = (e, id) => {
     e.preventDefault();
     setMenuOpen(false);
     if (location.pathname === "/") {
-      scrollToLatest();
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     } else {
-      navigate("/");
-      setTimeout(scrollToLatest, 100);
+      // Home mount olurken kendi kaydırmasını yapıyor; hedefi ona bildirip bırakıyoruz
+      navigate("/", { state: { scrollTo: id } });
     }
   };
 
@@ -157,13 +156,17 @@ const Navbar = () => {
               ANA SAYFA
             </Link>
             <a
-              href="#latest"
-              onClick={handleReviewsClick}
+              href="/#latest"
+              onClick={(e) => handleAnchorClick(e, "latest")}
               className={`cursor-pointer ${linkClass(isReviewsActive)}`}
             >
               İNCELEMELER
             </a>
-            <a href="/#about" className={linkClass(false)}>
+            <a
+              href="/#about"
+              onClick={(e) => handleAnchorClick(e, "about")}
+              className={`cursor-pointer ${linkClass(false)}`}
+            >
               HAKKIMIZDA
             </a>
           </nav>
@@ -202,13 +205,17 @@ const Navbar = () => {
                 ANA SAYFA
               </Link>
               <a
-                href="#latest"
-                onClick={handleReviewsClick}
+                href="/#latest"
+                onClick={(e) => handleAnchorClick(e, "latest")}
                 className={`py-4 cursor-pointer ${linkClass(isReviewsActive)}`}
               >
                 İNCELEMELER
               </a>
-              <a href="/#about" className={`py-4 ${linkClass(false)}`}>
+              <a
+                href="/#about"
+                onClick={(e) => handleAnchorClick(e, "about")}
+                className={`py-4 cursor-pointer ${linkClass(false)}`}
+              >
                 HAKKIMIZDA
               </a>
             </nav>

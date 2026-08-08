@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigationType } from "react-router-dom";
+import { Link, useNavigationType, useLocation } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
 import { PeakIcon, AdvanceIcon } from "../components/icons";
@@ -13,6 +13,9 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [isRestored, setIsRestored] = useState(false);
   const navType = useNavigationType();
+  const location = useLocation();
+  // Navbar başka bir sayfadan "künyeye git" gibi açık bir hedefle gönderebiliyor
+  const scrollTarget = location.state?.scrollTo;
 
   useEffect(() => {
     const getCategories = async () => {
@@ -46,6 +49,16 @@ const Home = () => {
 
   useEffect(() => {
     if (!loading) {
+      // Açık hedef varsa kaydırma geri yüklemesini atla, oraya git
+      if (scrollTarget) {
+        requestAnimationFrame(() => {
+          document
+            .getElementById(scrollTarget)
+            ?.scrollIntoView({ behavior: "smooth" });
+          setIsRestored(true);
+        });
+        return;
+      }
       if (navType === "POP") {
         const savedPosition = sessionStorage.getItem("homeScrollPosition");
         if (savedPosition !== null) {
@@ -64,7 +77,7 @@ const Home = () => {
         setIsRestored(true);
       }
     }
-  }, [loading, navType]);
+  }, [loading, navType, scrollTarget]);
 
   useEffect(() => {
     if (!isRestored) return;
