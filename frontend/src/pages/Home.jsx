@@ -62,13 +62,22 @@ const Home = () => {
       if (navType === "POP") {
         const savedPosition = sessionStorage.getItem("homeScrollPosition");
         if (savedPosition !== null) {
-          setTimeout(() => {
-            window.scrollTo({
-              top: parseInt(savedPosition, 10),
-              behavior: "instant",
-            });
-            setIsRestored(true);
-          }, 150);
+          const top = parseInt(savedPosition, 10);
+          // Sabit gecikme yerine her karede sayfa yüksekliğini ölçüyoruz:
+          // hedefe yetecek kadar uzar uzamaz tek seferde konumlanıyoruz,
+          // böylece arada yanlış bir konumda bekleme olmuyor.
+          let tries = 60; // ~1sn tavan, veri hiç gelmezse takılı kalmasın
+          const restore = () => {
+            const max =
+              document.documentElement.scrollHeight - window.innerHeight;
+            if (max >= top || tries-- <= 0) {
+              window.scrollTo({ top, behavior: "instant" });
+              setIsRestored(true);
+            } else {
+              requestAnimationFrame(restore);
+            }
+          };
+          requestAnimationFrame(restore);
         } else {
           setIsRestored(true);
         }
