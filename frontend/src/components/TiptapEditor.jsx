@@ -76,8 +76,22 @@ const TiptapEditor = ({ value, onChange }) => {
     },
     editorProps: {
       attributes: {
-        className:
-          "prose prose-invert max-w-none p-4 min-h-[250px] focus:outline-none text-zinc-300 leading-relaxed prose-headings:text-white prose-headings:font-gaming prose-headings:uppercase prose-headings:tracking-tight prose-strong:text-white prose-blockquote:border-l-2 prose-blockquote:border-phosphor prose-blockquote:text-zinc-400 prose-a:text-phosphor",
+        // DİKKAT: burası React değil, ProseMirror'a giden ham DOM özniteliği.
+        // "className" yazılırsa hiçbir sınıf uygulanmaz — "class" olmalı.
+        // prose-* varyantları da kullanılamıyor (@tailwindcss/typography kurulu
+        // değil), o yüzden alt elemanları doğrudan hedefliyoruz.
+        class: [
+          "p-4 min-h-[320px] focus:outline-none text-zinc-300 leading-relaxed",
+          "[&_p]:mb-4",
+          "[&_h3]:text-white [&_h3]:font-gaming [&_h3]:font-black [&_h3]:text-lg",
+          "[&_h3]:uppercase [&_h3]:tracking-tight [&_h3]:mt-6 [&_h3]:mb-3",
+          "[&_strong]:text-white [&_strong]:font-bold",
+          "[&_em]:italic",
+          "[&_blockquote]:border-l-2 [&_blockquote]:border-phosphor",
+          "[&_blockquote]:pl-4 [&_blockquote]:text-zinc-400 [&_blockquote]:italic",
+          "[&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5",
+          "[&_li]:mb-1",
+        ].join(" "),
       },
     },
   });

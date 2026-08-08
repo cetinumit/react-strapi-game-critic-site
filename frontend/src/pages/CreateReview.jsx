@@ -143,8 +143,10 @@ const CreateReview = () => {
       // 4. STRAPI'YE İNCELEMEYİ KAYDET
       await createReview(payload);
 
-      // Başarılı olursa yeni oluşturulan detaya yönlendir
-      navigate(`/review/${slug}`);
+      // Başarılı olursa yeni oluşturulan detaya yönlendir.
+      // replace: oluşturma sayfasını geçmişten çıkarıyor, yoksa detay
+      // sayfasındaki geri tuşu buraya geri dönüyordu.
+      navigate(`/review/${slug}`, { replace: true });
     } catch (err) {
       setError(
         err.message || "İnceleme oluşturulurken bir hata meydana geldi.",

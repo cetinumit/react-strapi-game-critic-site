@@ -303,20 +303,6 @@ const EditReview = () => {
           />
         </div>
 
-        {/* Ana Metin */}
-        <div>
-          <label className={`${LABEL} flex items-center gap-2`}>
-            <SignatureIcon className="w-3.5 h-3.5 text-phosphor" /> İnceleme
-            Metni
-          </label>
-          <TiptapEditor
-            value={formData.content}
-            onChange={(newContent) =>
-              setFormData({ ...formData, content: newContent })
-            }
-          />
-        </div>
-
         {/* Artılar ve Eksiler */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -351,6 +337,20 @@ const EditReview = () => {
               Her satıra bir madde
             </p>
           </div>
+        </div>
+
+        {/* Ana Metin — CreateReview ile aynı sıra: formun en altında */}
+        <div>
+          <label className={`${LABEL} flex items-center gap-2`}>
+            <SignatureIcon className="w-3.5 h-3.5 text-phosphor" /> İnceleme
+            Metni
+          </label>
+          <TiptapEditor
+            value={formData.content}
+            onChange={(newContent) =>
+              setFormData({ ...formData, content: newContent })
+            }
+          />
         </div>
 
         {/* Kaydet */}
