@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   fetchReviewBySlug,
@@ -33,6 +33,14 @@ const EditReview = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const errorRef = useRef(null);
+
+  // Buton en altta, hata bandı en üstte — kaydırmazsak uyarı görülmüyor
+  useEffect(() => {
+    if (error) {
+      errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [error]);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -176,16 +184,23 @@ const EditReview = () => {
             İncelemeyi Düzenle
           </h1>
         </div>
-        <Link
-          to={`/review/${slug}`}
+        {/* Link kullanmıyoruz: PUSH yapıp düzenleme sayfasını geçmişte bırakıyordu
+            ve inceleme sayfasının geri tuşu buraya geri dönüyordu. */}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
           className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-panel border border-line hover:border-phosphor/40 text-zinc-400 hover:text-white text-[11px] font-data font-bold uppercase tracking-widest transition-colors"
         >
           <ReturnIcon className="w-4 h-4" /> Geri Dön
-        </Link>
+        </button>
       </div>
 
       {error && (
-        <div className="mb-6 p-3 bg-critical/10 border border-critical/30 text-critical text-xs flex items-center gap-2.5">
+        <div
+          ref={errorRef}
+          role="alert"
+          className="mb-6 p-3 bg-critical/10 border border-critical/30 text-critical text-xs flex items-center gap-2.5"
+        >
           <WarningIcon className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchCategories, uploadImage, createReview } from "../api";
 import {
@@ -9,7 +9,14 @@ import {
   GainIcon,
   LossIcon,
   LayoutMarkIcon,
+  SignatureIcon,
 } from "../components/icons";
+import TiptapEditor from "../components/TiptapEditor";
+
+// Strapi'nin Blocks alanı dizi bekliyor; içinde gerçekten metin var mı?
+const hasText = (blocks) =>
+  Array.isArray(blocks) &&
+  blocks.some((b) => b.children?.some((c) => (c.text || "").trim()));
 
 // Formda çok tekrar ettikleri için tek yerde tutuyoruz
 const LABEL =
@@ -22,12 +29,22 @@ const CreateReview = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const errorRef = useRef(null);
+
+  // Form uzun; hata bandı en üstte, buton en altta. Kaydırmazsak
+  // kullanıcı uyarıyı hiç görmüyor ve "hiçbir şey olmadı" sanıyor.
+  useEffect(() => {
+    if (error) {
+      errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [error]);
 
   // Form state'leri
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [summary, setSummary] = useState("");
-  const [content, setContent] = useState("");
+  // EditReview ile aynı format: Strapi Blocks dizisi (düz string değil)
+  const [content, setContent] = useState([]);
   const [score, setScore] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [imageFile, setImageFile] = useState(null);
@@ -78,13 +95,22 @@ const CreateReview = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    // Yüklemeye başlamadan önce kontrol et; yoksa "Yayınlanıyor..." bir an yanıp sönüyor
+    if (!imageFile) {
+      setError("Kapak görseli zorunlu. Lütfen bir görsel seçin.");
+      return;
+    }
+
+    // Tiptap'ta native "required" yok, kontrolü kendimiz yapıyoruz
+    if (!hasText(content)) {
+      setError("İnceleme ana gövde metni boş olamaz.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      if (!imageFile) {
-        throw new Error("Lütfen inceleme için bir kapak görseli yükleyin.");
-      }
-
       // 1. ÖNCE RESMİ STRAPI'YE YÜKLE VE ID'SİNİ AL
       const uploadedImageId = await uploadImage(imageFile);
 
@@ -108,8 +134,10 @@ const CreateReview = () => {
         score: Number(score),
         category: categoryId,
         coverImage: uploadedImageId,
-        pros: JSON.stringify(prosArray), // Strapi'deki JSON alanına uygun format
-        cons: JSON.stringify(consArray),
+        // Dizi olarak gönderiyoruz. JSON.stringify ile string göndermek
+        // alanı bozuyordu — EditReview da dizi gönderiyor.
+        pros: prosArray,
+        cons: consArray,
       };
 
       // 4. STRAPI'YE İNCELEMEYİ KAYDET
@@ -147,7 +175,11 @@ const CreateReview = () => {
       </div>
 
       {error && (
-        <div className="mb-6 p-3 bg-critical/10 border border-critical/30 text-critical text-xs flex items-center gap-2.5">
+        <div
+          ref={errorRef}
+          role="alert"
+          className="mb-6 p-3 bg-critical/10 border border-critical/30 text-critical text-xs flex items-center gap-2.5"
+        >
           <WarningIcon className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -231,14 +263,23 @@ const CreateReview = () => {
         {/* Kapak Görseli Yükleme */}
         <div>
           <label className={LABEL}>Kapak Görseli *</label>
-          <div className="border border-dashed border-line hover:border-phosphor/40 bg-void/40 p-8 text-center transition-colors">
+          {/* Eksik olan buysa kutuyu da işaretle — uyarı bandı tek başına kalmasın */}
+          <div
+            className={`border border-dashed bg-void/40 p-8 text-center transition-colors ${
+              error && !imageFile
+                ? "border-critical/60"
+                : "border-line hover:border-phosphor/40"
+            }`}
+          >
             <input
               type="file"
               id="coverUpload"
               accept="image/*"
-              required
               onChange={(e) => setImageFile(e.target.files[0])}
               className="hidden"
+              // required YOK: gizli bir alan doğrulamada takılınca tarayıcı
+              // uyarı balonunu gösteremiyor ve gönderimi sessizce iptal ediyor.
+              // Kontrolü handleSubmit içinde kendimiz yapıyoruz.
             />
             <label
               htmlFor="coverUpload"
@@ -319,15 +360,11 @@ const CreateReview = () => {
 
         {/* Detaylı Ana Metin */}
         <div>
-          <label className={LABEL}>İnceleme Ana Gövde Metni (Detaylar) *</label>
-          <textarea
-            rows="8"
-            required
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Oyun veya donanım hakkında tüm detayları paragraf paragraf anlatın..."
-            className={`${FIELD} leading-relaxed resize-y`}
-          />
+          <label className={`${LABEL} flex items-center gap-2`}>
+            <SignatureIcon className="w-3.5 h-3.5 text-phosphor" /> İnceleme Ana
+            Gövde Metni *
+          </label>
+          <TiptapEditor value={content} onChange={setContent} />
         </div>
 
         {/* Gönder Butonu */}
