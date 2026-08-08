@@ -6,12 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://techcritic.netlify.app/review/cyberpunk-2077-phantom-liberty</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://techcritic.netlify.app/review/iot-nodemaster-esp8266</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -109,6 +103,12 @@
   </url>
   <url>
     <loc>https://techcritic.netlify.app/review/elden-ring-shadow-of-the-erdtree</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://techcritic.netlify.app/review/cyberpunk-2077-phantom-liberty</loc>
     <lastmod>2026-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
