@@ -50,8 +50,11 @@ const Navbar = () => {
     if (location.pathname === "/") {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     } else {
-      // Home mount olurken kendi kaydırmasını yapıyor; hedefi ona bildirip bırakıyoruz
-      navigate("/", { state: { scrollTo: id } });
+      // Home mount olurken kendi kaydırmasını yapıyor; hedefi ona bırakıyoruz.
+      // location.state kullanmıyoruz: o history kaydına yapışıp kalıcı oluyor,
+      // geri dönüşte ve yenilemede tekrar tetikleniyordu.
+      sessionStorage.setItem("scrollToOnHome", id);
+      navigate("/");
     }
   };
 

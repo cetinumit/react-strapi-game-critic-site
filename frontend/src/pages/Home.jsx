@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigationType, useLocation } from "react-router-dom";
+import { Link, useNavigationType } from "react-router-dom";
 import { fetchReviews, fetchCategories, getStrapiMedia } from "../api";
 import ReviewCard from "../components/ReviewCard";
 import { PeakIcon, AdvanceIcon } from "../components/icons";
@@ -13,9 +13,6 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [isRestored, setIsRestored] = useState(false);
   const navType = useNavigationType();
-  const location = useLocation();
-  // Navbar başka bir sayfadan "künyeye git" gibi açık bir hedefle gönderebiliyor
-  const scrollTarget = location.state?.scrollTo;
 
   useEffect(() => {
     const getCategories = async () => {
@@ -49,11 +46,14 @@ const Home = () => {
 
   useEffect(() => {
     if (!loading) {
-      // Açık hedef varsa kaydırma geri yüklemesini atla, oraya git
-      if (scrollTarget) {
+      // Navbar başka bir sayfadan hedef bırakmışsa oraya git. Tek kullanımlık:
+      // okur okumaz siliyoruz ki yenilemede/geri dönüşte tekrarlanmasın.
+      const target = sessionStorage.getItem("scrollToOnHome");
+      if (target) {
+        sessionStorage.removeItem("scrollToOnHome");
         requestAnimationFrame(() => {
           document
-            .getElementById(scrollTarget)
+            .getElementById(target)
             ?.scrollIntoView({ behavior: "smooth" });
           setIsRestored(true);
         });
@@ -86,7 +86,7 @@ const Home = () => {
         setIsRestored(true);
       }
     }
-  }, [loading, navType, scrollTarget]);
+  }, [loading, navType]);
 
   useEffect(() => {
     if (!isRestored) return;
