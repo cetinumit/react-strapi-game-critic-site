@@ -44,6 +44,17 @@ const Navbar = () => {
 
   // Çapa linkleri: URL'e hash yazmıyoruz. Yazsaydık Home'un kaydırma geri
   // yükleme efekti navType değişimiyle tetiklenip sayfayı tepeye atardı.
+  // Zaten ana sayfadayken Link rotayı değiştirmiyor, dolayısıyla Home'un
+  // kaydırma efekti de tetiklenmiyor ve hiçbir şey olmuyordu. Bu durumda
+  // gezinmeyi iptal edip doğrudan başa dönüyoruz.
+  const handleHomeClick = (e) => {
+    setMenuOpen(false);
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   const handleAnchorClick = (e, id) => {
     e.preventDefault();
     setMenuOpen(false);
@@ -129,7 +140,7 @@ const Navbar = () => {
           <Link
             to="/"
             className="flex items-center gap-2.5 shrink-0 group"
-            onClick={() => setMenuOpen(false)}
+            onClick={handleHomeClick}
           >
             <img
               src={logo}
@@ -153,6 +164,7 @@ const Navbar = () => {
           <nav className="hidden md:flex items-center gap-5 font-data text-[11px] uppercase tracking-wider">
             <Link
               to="/"
+              onClick={handleHomeClick}
               className={linkClass(isHomeActive)}
               aria-current={isHomeActive ? "page" : undefined}
             >
@@ -202,6 +214,7 @@ const Navbar = () => {
             <nav className="flex flex-col font-data text-sm uppercase tracking-wider">
               <Link
                 to="/"
+                onClick={handleHomeClick}
                 className={`py-4 ${linkClass(isHomeActive)}`}
                 aria-current={isHomeActive ? "page" : undefined}
               >
