@@ -7,50 +7,55 @@ import { tiptapToStrapi, strapiToTiptap } from "../utils/strapiBlocksConverter";
 const MenuBar = ({ editor }) => {
   if (!editor) return null;
 
-  const getButtonClass = (isActive) => `
-    px-3 py-1.5 rounded-md text-sm font-medium transition-colors
+  const btn = (isActive) => `
+    px-3 py-1.5 text-[10px] font-data font-bold uppercase tracking-widest
+    border transition-colors
     ${
       isActive
-        ? "bg-zinc-700 text-white"
-        : "text-zinc-400 hover:bg-zinc-800 hover:text-white"
+        ? "bg-phosphor text-black border-phosphor"
+        : "bg-transparent text-zinc-500 border-line hover:text-white hover:border-zinc-600"
     }
   `;
 
   return (
-    <div className="flex flex-wrap gap-2 p-2 bg-zinc-900 border-b border-zinc-700 rounded-t-md">
+    <div className="flex flex-wrap gap-2 p-2 bg-void border-b border-line">
       <button
+        type="button"
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleBold().run();
         }}
-        className={getButtonClass(editor.isActive("bold"))}
+        className={btn(editor.isActive("bold"))}
       >
         Kalın
       </button>
       <button
+        type="button"
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleItalic().run();
         }}
-        className={getButtonClass(editor.isActive("italic"))}
+        className={btn(editor.isActive("italic"))}
       >
         İtalik
       </button>
       <button
+        type="button"
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleHeading({ level: 3 }).run();
         }}
-        className={getButtonClass(editor.isActive("heading", { level: 3 }))}
+        className={btn(editor.isActive("heading", { level: 3 }))}
       >
         H3 Başlık
       </button>
       <button
+        type="button"
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleBlockquote().run();
         }}
-        className={getButtonClass(editor.isActive("blockquote"))}
+        className={btn(editor.isActive("blockquote"))}
       >
         Alıntı
       </button>
@@ -72,7 +77,7 @@ const TiptapEditor = ({ value, onChange }) => {
     editorProps: {
       attributes: {
         className:
-          "prose prose-invert max-w-none p-4 min-h-[250px] focus:outline-none text-zinc-300 prose-headings:text-zinc-100 prose-a:text-blue-400",
+          "prose prose-invert max-w-none p-4 min-h-[250px] focus:outline-none text-zinc-300 leading-relaxed prose-headings:text-white prose-headings:font-gaming prose-headings:uppercase prose-headings:tracking-tight prose-strong:text-white prose-blockquote:border-l-2 prose-blockquote:border-phosphor prose-blockquote:text-zinc-400 prose-a:text-phosphor",
       },
     },
   });
@@ -85,7 +90,7 @@ const TiptapEditor = ({ value, onChange }) => {
   }, [value, editor]);
 
   return (
-    <div className="flex flex-col border border-zinc-700 rounded-md bg-zinc-950 focus-within:border-zinc-500 transition-colors">
+    <div className="flex flex-col border border-line bg-void focus-within:border-phosphor transition-colors">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>
